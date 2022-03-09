@@ -3,21 +3,14 @@
 
 ## Role Based Access Control (RBAC) for your go application
 
-This package allows you to manage user permissions and roles in a database.
+This package allows you to manage user permissions and roles in your database.
 
-- 👇 Install
-- Basic Usage
-- Using permissions via roles
-- Direct Permissions
-- Using your user model
-
-## Install
+<details>
+<summary>👇 Install</summary>
 
 ```shell
 go get github.com/Permify/permify-gorm
 ```
-
-<br>
 
 Initialize the new Permify.
 
@@ -34,8 +27,12 @@ permify, _ := New(Options{
 
 <br>
 
+</details>
+
+<br>
+
 <details>
-<summary>👌 Basic Usage</summary>
+<summary>🚲 Basic Usage</summary>
 <br>
 This package allows users to be associated with permissions and roles. Each role is associated with multiple permissions.
 
@@ -63,14 +60,34 @@ err := permify.AddPermissionsToRole("admin", []uint{1, 3})
 
 </details>
 
+<br>
 
+<details>
+<summary>🚘 Using permissions via roles</summary>
+<br>
 
+</details>
 
 <br>
 
+<details>
+<summary>🚤 Direct Permissions</summary>
+<br>
+
+</details>
+
+<br>
+
+<details>
+<summary>🚀 Using your user model</summary>
+<br>
+
+</details>
+
+
 <h2 align="left">:heart: Let's get connected:</h2>
 
-----
+-----
 
 <p align="left">
 <a href="https://twitter.com/GetPermify">
