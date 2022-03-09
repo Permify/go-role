@@ -5,6 +5,8 @@
 
 This package allows you to manage user permissions and roles in your database.
 
+<br>
+
 <details>
 <summary>👇 Install</summary>
 
@@ -84,6 +86,7 @@ err := permify.AddPermissionsToRole("admin", []uint{1, 3})
 
 </details>
 
+<br>
 
 <h2 align="left">:heart: Let's get connected:</h2>
 
