@@ -691,7 +691,7 @@ func (s *Permify) UserHasAllPermissions(userID uint, p interface{}) (b bool, err
 		return false, err
 	}
 
-	j := helpers.JoinUintArrays(upIDs, pIDs)
+	j := helpers.RemoveDuplicateValues(helpers.JoinUintArrays(upIDs, pIDs))
 
 	for _, p := range permissions.IDs() {
 		if !helpers.InArray(p, j) {
