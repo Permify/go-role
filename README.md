@@ -36,14 +36,18 @@ permify, _ := New(Options{
 
 <details>
 <summary>👌 Basic Usage</summary>
-
+<br>
 This package allows users to be associated with permissions and roles. Each role is associated with multiple permissions.
 
 ```go
-// role
+// Create new role
+// Name parameter is converted to guard name. example: senior $#% associate -> senior-associate.
+// If a role with the same name has been created before, it will not create it again. (FirstOrCreate)
 err := permify.CreateRole("admin", "role description")
 
-// permission
+// Create new permission
+// Name parameter is converted to guard name. example: create $#% contact -> create-contact.
+// If a permission with the same name has been created before, it will not create it again. (FirstOrCreate)
 err := permify.CreatePermission("edit user details", "")
 ```
 
@@ -60,6 +64,10 @@ err := permify.AddPermissionsToRole("admin", []uint{1, 3})
 </details>
 
 
+
+
+<br>
+
 <h2 align="left">:heart: Let's get connected:</h2>
 
 ----
@@ -68,7 +76,7 @@ err := permify.AddPermissionsToRole("admin", []uint{1, 3})
 <a href="https://twitter.com/GetPermify">
   <img alt="guilyx | Twitter" width="50px" src="https://user-images.githubusercontent.com/43545812/144034996-602b144a-16e1-41cc-99e7-c6040b20dcaf.png"/>
 </a>
-<a href="https://www.linkedin.com/in/permifyco">
+<a href="https://www.linkedin.com/company/permifyco">
   <img alt="guilyx's LinkdeIN" width="50px" src="https://user-images.githubusercontent.com/43545812/144035037-0f415fc7-9f96-4517-a370-ccc6e78a714b.png" />
 </a>
 </p>
