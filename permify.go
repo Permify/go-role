@@ -16,6 +16,7 @@ var (
 	errUnsupportedValueType     = errors.New("err unsupported value type")
 )
 
+// Options has the options for initiating the Permify
 type Options struct {
 	Migrate bool
 	DB      *gorm.DB
@@ -45,6 +46,7 @@ func New(opts Options) (p *Permify, err error) {
 	return
 }
 
+// Permify is main struct of thi package.
 type Permify struct {
 	RoleRepository       repositories.IRoleRepository
 	PermissionRepository repositories.IPermissionRepository
