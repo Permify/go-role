@@ -76,7 +76,7 @@ err := permify.CreateRole("admin", "role description")
 err := permify.CreatePermission("edit user details", "")
 ```
 
-A permissions can be added to a role using this method in different ways:
+Permissions can be added to a role using AddPermissionsToRole method in different ways:
 
 ```go
 // first parameter is role id
@@ -87,10 +87,10 @@ err := permify.AddPermissionsToRole("admin", []string{"edit user details", "crea
 err := permify.AddPermissionsToRole("admin", []uint{1, 3})
 ```
 
-Using these methods you can manage roles permissions removes and overwrites like the same above ways:
+With using these methods you can remove and overwrite permissions:
 
 ```go
-// Overwrites the permissions of the role according to the permission names or ids.
+// overwrites the permissions of the role according to the permission names or ids.
 err := permify.ReplacePermissionsToRole("admin", []string{"edit user details", "create contact"})
 
 // remove permissions from role according to the permission names or ids.
@@ -116,7 +116,8 @@ roles, totalCount, err := permify.GetAllRoles(options.RoleOption{
     WithPermissions: false,
 })
 
-// The data returned is a collection of roles. Collections provides a fluent convenient wrapper for working with arrays of data.
+// The data returned is a collection of roles.
+// Collections provides a fluent convenient wrapper for working with arrays of data.
 fmt.Println(roles.IDs())
 fmt.Println(roles.Names())
 fmt.Println(roles.Permissions().Names())
@@ -226,7 +227,8 @@ roles, totalCount, err := permify.GetRolesOfUser(1, options.RoleOption{
     },
 })
 
-// the data returned is a collection of roles. Collections provides a fluent convenient wrapper for working with arrays of data.
+// the data returned is a collection of roles. 
+// Collections provides a fluent convenient wrapper for working with arrays of data.
 fmt.Println(roles.IDs())
 fmt.Println(roles.Names())
 fmt.Println(roles.Len())
@@ -281,7 +283,8 @@ permissions, totalCount, err := permify.GetPermissionsOfRoles([]string{"admin", 
     },
 })
 
-// the data returned is a collection of permissions. Collections provides a fluent convenient wrapper for working with arrays of data.
+// the data returned is a collection of permissions. 
+// Collections provides a fluent convenient wrapper for working with arrays of data.
 fmt.Println(permissions.IDs())
 fmt.Println(permissions.Names())
 fmt.Println(permissions.Len())
@@ -346,7 +349,8 @@ Get User's All Permissions
 ```go
 permissions, err := permify.GetAllPermissionsOfUser(1)
 
-// the data returned is a collection of permissions. Collections provides a fluent convenient wrapper for working with arrays of data.
+// the data returned is a collection of permissions. 
+// Collections provides a fluent convenient wrapper for working with arrays of data.
 fmt.Println(permissions.IDs())
 fmt.Println(permissions.Names())
 fmt.Println(permissions.Len())
@@ -362,7 +366,8 @@ permissions, totalCount, err := permify.GetDirectPermissionsOfUser(1, options.Pe
     },
 })
 
-// the data returned is a collection of permissions. Collections provides a fluent convenient wrapper for working with arrays of data.
+// the data returned is a collection of permissions.
+// Collections provides a fluent convenient wrapper for working with arrays of data.
 fmt.Println(permissions.IDs())
 fmt.Println(permissions.Names())
 fmt.Println(permissions.Len())
