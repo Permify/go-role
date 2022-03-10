@@ -36,6 +36,16 @@ func IsInt(value interface{}) bool {
 	return false
 }
 
+// IsUInt is the given value an unsigned integer?
+// @param interface{}
+// return bool
+func IsUInt(value interface{}) bool {
+	if reflect.TypeOf(value).Kind() == reflect.Uint {
+		return true
+	}
+	return false
+}
+
 // IsUIntArray is the given value an unsigned integer array?
 // @param interface{}
 // return bool
