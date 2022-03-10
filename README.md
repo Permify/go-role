@@ -5,11 +5,8 @@
 
 This package allows you to manage user permissions and roles in your database.
 
-<br>
 
-<details>
-<summary>👇 Setup</summary>
-<br>
+## 👇 Setup
 
 Install
 
@@ -37,13 +34,9 @@ p, _ := permify.New(permify.Options{
 })
 ```
 
-</details>
 
-<br>
+## 🚲 Basic Usage
 
-<details>
-<summary>🚲 Basic Usage</summary>
-<br>
 This package allows users to be associated with permissions and roles. Each role is associated with multiple permissions.
 
 ```go
@@ -144,11 +137,9 @@ can, err := permify.UserHasAllRoles(1, []string{"admin", "manager"})
 can, err := permify.UserHasAnyRoles(1, []string{"admin", "manager"})
 ```
 
-</details>
-
-<br>
 
 <details>
+
 <summary>🚘 Using permissions via roles</summary>
 <br>
 
