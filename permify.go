@@ -44,7 +44,7 @@ func New(opts Options) (p *Permify, err error) {
 	return
 }
 
-// Permify is main struct of thi package.
+// Permify is main struct of this package.
 type Permify struct {
 	RoleRepository       repositories.IRoleRepository
 	PermissionRepository repositories.IPermissionRepository
@@ -85,6 +85,13 @@ func (s *Permify) GetRole(r interface{}, withPermissions bool) (role models.Role
 			return s.RoleRepository.GetRoleByIDWithPermissions(uint(r.(int)))
 		}
 		return s.RoleRepository.GetRoleByID(uint(r.(int)))
+	}
+
+	if helpers.IsUInt(r) {
+		if withPermissions {
+			return s.RoleRepository.GetRoleByIDWithPermissions(r.(uint))
+		}
+		return s.RoleRepository.GetRoleByID(r.(uint))
 	}
 
 	return models.Role{}, errUnsupportedValueType
@@ -290,6 +297,10 @@ func (s *Permify) GetPermission(p interface{}) (permission models.Permission, er
 
 	if helpers.IsInt(p) {
 		return s.PermissionRepository.GetPermissionByID(uint(p.(int)))
+	}
+
+	if helpers.IsUInt(p) {
+		return s.PermissionRepository.GetPermissionByID(p.(uint))
 	}
 
 	return models.Permission{}, errUnsupportedValueType
@@ -527,7 +538,7 @@ func (s *Permify) ReplaceRolesToUser(userID uint, r interface{}) (err error) {
 	return s.UserRepository.ClearRoles(userID)
 }
 
-// RemoveRolesFromUser remove direct permissions from user according to the role names or ids.
+// RemoveRolesFromUser remove roles from user according to the role names or ids.
 // First parameter is the user id, second parameter is can be role name(s) or id(s).
 // @param uint
 // @param interface{}
