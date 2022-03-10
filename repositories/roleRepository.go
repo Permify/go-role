@@ -1,12 +1,12 @@
 package repositories
 
 import (
-	`gorm.io/gorm`
+	"gorm.io/gorm"
 
-	`github.com/Permify/permify-gorm/collections`
-	`github.com/Permify/permify-gorm/models`
-	`github.com/Permify/permify-gorm/models/pivot`
-	`github.com/Permify/permify-gorm/repositories/scopes`
+	"github.com/Permify/permify-gorm/collections"
+	"github.com/Permify/permify-gorm/models"
+	"github.com/Permify/permify-gorm/models/pivot"
+	"github.com/Permify/permify-gorm/repositories/scopes"
 )
 
 // IRoleRepository its data access layer abstraction of role.
@@ -258,7 +258,6 @@ func (repository *RoleRepository) HasAnyPermissions(roles collections.Role, perm
 // @return func(db *gorm.DB) *gorm.DB
 func (repository *RoleRepository) paginate(pagination scopes.GormPager) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-
 		if pagination != nil {
 			db.Scopes(pagination.ToPaginate())
 		}

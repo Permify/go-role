@@ -6,7 +6,7 @@ type Seedable interface {
 }
 
 // Seeds seed to seedable models.
-func Seeds(repos ...Seedable) (err error)  {
+func Seeds(repos ...Seedable) (err error) {
 	for _, r := range repos {
 		err = r.Seed()
 	}
@@ -19,10 +19,9 @@ type Migratable interface {
 }
 
 // Migrates migrate to migratable models.
-func Migrates(repos ...Migratable) (err error)  {
+func Migrates(repos ...Migratable) (err error) {
 	for _, r := range repos {
 		err = r.Migrate()
 	}
 	return
 }
-

@@ -1,7 +1,7 @@
 package helpers
 
 import (
-	`math`
+	"math"
 )
 
 // NextPageCal calculate next page according to the page number and total page count.

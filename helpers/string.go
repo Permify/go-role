@@ -1,8 +1,9 @@
 package helpers
 
 import (
-	`github.com/gosimple/slug`
-	`reflect`
+	"reflect"
+
+	"github.com/gosimple/slug"
 )
 
 // Guard edits the given string.
@@ -40,7 +41,7 @@ func IsInt(value interface{}) bool {
 // return bool
 func IsUIntArray(value interface{}) bool {
 	t := reflect.TypeOf(value)
-	if !IsArray(value){
+	if !IsArray(value) {
 		return false
 	}
 	if t.Elem().Kind() == reflect.Uint {
@@ -64,7 +65,7 @@ func IsString(value interface{}) bool {
 // return bool
 func IsStringArray(value interface{}) bool {
 	t := reflect.TypeOf(value)
-	if !IsArray(value){
+	if !IsArray(value) {
 		return false
 	}
 	if t.Elem().Kind() == reflect.String {

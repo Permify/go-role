@@ -1,7 +1,7 @@
 package models
 
 import (
-	`time`
+	"time"
 )
 
 // Permission represents the database model of permissions

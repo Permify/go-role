@@ -1,17 +1,16 @@
 package repositories
 
 import (
-	`gorm.io/gorm`
-	`gorm.io/gorm/clause`
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 
-	`github.com/Permify/permify-gorm/collections`
-	`github.com/Permify/permify-gorm/models`
-	`github.com/Permify/permify-gorm/models/pivot`
+	"github.com/Permify/permify-gorm/collections"
+	"github.com/Permify/permify-gorm/models"
+	"github.com/Permify/permify-gorm/models/pivot"
 )
 
 // IUserRepository its data access layer abstraction of user.
 type IUserRepository interface {
-
 	// actions
 
 	AddPermissions(userID uint, permissions collections.Permission) (err error)
@@ -48,7 +47,6 @@ type UserRepository struct {
 // @return error
 func (repository *UserRepository) AddPermissions(userID uint, permissions collections.Permission) error {
 	return repository.Database.Transaction(func(tx *gorm.DB) error {
-
 		var ups []pivot.UserPermissions
 
 		for _, p := range permissions.Origin() {
@@ -73,7 +71,6 @@ func (repository *UserRepository) AddPermissions(userID uint, permissions collec
 // @return error
 func (repository *UserRepository) ReplacePermissions(userID uint, permissions collections.Permission) error {
 	return repository.Database.Transaction(func(tx *gorm.DB) error {
-
 		if err := tx.Where("user_permissions.user_id = ?", userID).Delete(&pivot.UserPermissions{}).Error; err != nil {
 			tx.Rollback()
 			return err
@@ -103,7 +100,6 @@ func (repository *UserRepository) ReplacePermissions(userID uint, permissions co
 // @return error
 func (repository *UserRepository) RemovePermissions(userID uint, permissions collections.Permission) error {
 	return repository.Database.Transaction(func(tx *gorm.DB) error {
-
 		var ups []pivot.UserPermissions
 
 		for _, p := range permissions.Origin() {

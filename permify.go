@@ -1,20 +1,19 @@
 package permify_gorm
 
 import (
-	`errors`
-	`gorm.io/gorm`
+	"errors"
 
-	`github.com/Permify/permify-gorm/collections`
-	`github.com/Permify/permify-gorm/helpers`
-	`github.com/Permify/permify-gorm/models`
-	`github.com/Permify/permify-gorm/options`
-	`github.com/Permify/permify-gorm/repositories`
-	`github.com/Permify/permify-gorm/repositories/scopes`
+	"gorm.io/gorm"
+
+	"github.com/Permify/permify-gorm/collections"
+	"github.com/Permify/permify-gorm/helpers"
+	"github.com/Permify/permify-gorm/models"
+	"github.com/Permify/permify-gorm/options"
+	"github.com/Permify/permify-gorm/repositories"
+	"github.com/Permify/permify-gorm/repositories/scopes"
 )
 
-var (
-	errUnsupportedValueType     = errors.New("err unsupported value type")
-)
+var errUnsupportedValueType = errors.New("err unsupported value type")
 
 // Options has the options for initiating the Permify
 type Options struct {
@@ -25,7 +24,6 @@ type Options struct {
 // New initializer for Permify
 // If migration is true, it generate all tables in the database if they don't exist.
 func New(opts Options) (p *Permify, err error) {
-
 	roleRepository := &repositories.RoleRepository{Database: opts.DB}
 	permissionRepository := &repositories.PermissionRepository{Database: opts.DB}
 	userRepository := &repositories.UserRepository{Database: opts.DB}
@@ -63,7 +61,6 @@ type Permify struct {
 // @param bool
 // @return models.Role, error
 func (s *Permify) GetRole(r interface{}, withPermissions bool) (role models.Role, err error) {
-
 	if helpers.IsArray(r) {
 		var roles []models.Role
 		roles, err = s.GetRoles(r, withPermissions)
@@ -100,7 +97,6 @@ func (s *Permify) GetRole(r interface{}, withPermissions bool) (role models.Role
 // @param bool
 // @return collections.Role, error
 func (s *Permify) GetRoles(r interface{}, withPermissions bool) (roles collections.Role, err error) {
-
 	if !helpers.IsArray(r) {
 		var role models.Role
 		role, err = s.GetRole(r, withPermissions)
@@ -197,7 +193,6 @@ func (s *Permify) DeleteRole(r interface{}) (err error) {
 // @param interface{}
 // @return error
 func (s *Permify) AddPermissionsToRole(r interface{}, p interface{}) (err error) {
-
 	var role models.Role
 	role, err = s.GetRole(r, false)
 	if err != nil {
@@ -224,7 +219,6 @@ func (s *Permify) AddPermissionsToRole(r interface{}, p interface{}) (err error)
 // @param interface{}
 // @return error
 func (s *Permify) ReplacePermissionsToRole(r interface{}, p interface{}) (err error) {
-
 	var role models.Role
 	role, err = s.GetRole(r, false)
 	if err != nil {
@@ -251,7 +245,6 @@ func (s *Permify) ReplacePermissionsToRole(r interface{}, p interface{}) (err er
 // @param interface{}
 // @return error
 func (s *Permify) RemovePermissionsFromRole(r interface{}, p interface{}) (err error) {
-
 	var role models.Role
 	role, err = s.GetRole(r, false)
 	if err != nil {
@@ -279,7 +272,6 @@ func (s *Permify) RemovePermissionsFromRole(r interface{}, p interface{}) (err e
 // @param interface{}
 // @return error
 func (s *Permify) GetPermission(p interface{}) (permission models.Permission, err error) {
-
 	if helpers.IsArray(p) {
 		var permissions []models.Permission
 		permissions, err = s.GetPermissions(p)
@@ -308,7 +300,6 @@ func (s *Permify) GetPermission(p interface{}) (permission models.Permission, er
 // @param interface{}
 // @return collections.Permission, error
 func (s *Permify) GetPermissions(p interface{}) (permissions collections.Permission, err error) {
-
 	if !helpers.IsArray(p) {
 		var permission models.Permission
 		permission, err = s.GetPermission(p)
@@ -367,7 +358,6 @@ func (s *Permify) GetDirectPermissionsOfUser(userID uint, option options.Permiss
 // @param options.PermissionOption
 // @return collections.Permission, int64, error
 func (s *Permify) GetPermissionsOfRoles(r interface{}, option options.PermissionOption) (permissions collections.Permission, totalCount int64, err error) {
-
 	var roles collections.Role
 	roles, err = s.GetRoles(r, false)
 	if err != nil {
@@ -390,7 +380,6 @@ func (s *Permify) GetPermissionsOfRoles(r interface{}, option options.Permission
 // @param uint
 // @return collections.Permission, error
 func (s *Permify) GetAllPermissionsOfUser(userID uint) (permissions collections.Permission, err error) {
-
 	var urIDs []uint
 	urIDs, _, err = s.RoleRepository.GetRoleIDsOfUser(userID, nil)
 	if err != nil {
@@ -449,7 +438,6 @@ func (s *Permify) DeletePermission(p interface{}) (err error) {
 // @param interface{}
 // @return error
 func (s *Permify) AddPermissionsToUser(userID uint, p interface{}) (err error) {
-
 	var permissions collections.Permission
 	permissions, err = s.GetPermissions(p)
 	if err != nil {
@@ -469,7 +457,6 @@ func (s *Permify) AddPermissionsToUser(userID uint, p interface{}) (err error) {
 // @param interface{}
 // @return error
 func (s *Permify) ReplacePermissionsToUser(userID uint, p interface{}) (err error) {
-
 	var permissions collections.Permission
 	permissions, err = s.GetPermissions(p)
 	if err != nil {
@@ -489,7 +476,6 @@ func (s *Permify) ReplacePermissionsToUser(userID uint, p interface{}) (err erro
 // @param interface{}
 // @return error
 func (s *Permify) RemovePermissionsFromUser(userID uint, p interface{}) (err error) {
-
 	var permissions collections.Permission
 	permissions, err = s.GetPermissions(p)
 	if err != nil {
@@ -509,7 +495,6 @@ func (s *Permify) RemovePermissionsFromUser(userID uint, p interface{}) (err err
 // @param interface{}
 // @return error
 func (s *Permify) AddRolesToUser(userID uint, r interface{}) (err error) {
-
 	var roles collections.Role
 	roles, err = s.GetRoles(r, false)
 	if err != nil {
@@ -529,7 +514,6 @@ func (s *Permify) AddRolesToUser(userID uint, r interface{}) (err error) {
 // @param interface{}
 // @return error
 func (s *Permify) ReplaceRolesToUser(userID uint, r interface{}) (err error) {
-
 	var roles collections.Role
 	roles, err = s.GetRoles(r, false)
 	if err != nil {
@@ -549,7 +533,6 @@ func (s *Permify) ReplaceRolesToUser(userID uint, r interface{}) (err error) {
 // @param interface{}
 // @return error
 func (s *Permify) RemoveRolesFromUser(userID uint, r interface{}) (err error) {
-
 	var roles collections.Role
 	roles, err = s.GetRoles(r, false)
 	if err != nil {
@@ -574,7 +557,6 @@ func (s *Permify) RemoveRolesFromUser(userID uint, r interface{}) (err error) {
 // @param interface{}
 // @return error
 func (s *Permify) RoleHasPermission(r interface{}, p interface{}) (b bool, err error) {
-
 	var roles collections.Role
 	roles, err = s.GetRoles(r, false)
 	if err != nil {
@@ -596,7 +578,6 @@ func (s *Permify) RoleHasPermission(r interface{}, p interface{}) (b bool, err e
 // @param interface{}
 // @return error
 func (s *Permify) RoleHasAllPermissions(r interface{}, p interface{}) (b bool, err error) {
-
 	var roles collections.Role
 	roles, err = s.GetRoles(r, false)
 	if err != nil {
@@ -618,7 +599,6 @@ func (s *Permify) RoleHasAllPermissions(r interface{}, p interface{}) (b bool, e
 // @param interface{}
 // @return error
 func (s *Permify) RoleHasAnyPermissions(r interface{}, p interface{}) (b bool, err error) {
-
 	var roles collections.Role
 	roles, err = s.GetRoles(r, false)
 	if err != nil {
@@ -722,7 +702,6 @@ func (s *Permify) UserHasAnyDirectPermissions(userID uint, p interface{}) (b boo
 	return s.UserRepository.HasAnyDirectPermissions(userID, permissions)
 }
 
-
 // UserHasPermission does the user have the given permission? (including the permissions of the roles)
 // First parameter is the user id, second parameter is can be permission name or id.
 // If the second parameter is an array, the first element of the given array is used.
@@ -771,7 +750,6 @@ func (s *Permify) UserHasPermission(userID uint, p interface{}) (b bool, err err
 // @param interface{}
 // @return bool, error
 func (s *Permify) UserHasAllPermissions(userID uint, p interface{}) (b bool, err error) {
-
 	var permissions collections.Permission
 	permissions, err = s.GetPermissions(p)
 	if err != nil {
@@ -779,13 +757,13 @@ func (s *Permify) UserHasAllPermissions(userID uint, p interface{}) (b bool, err
 	}
 
 	var upIDs []uint
-	upIDs,_, err = s.PermissionRepository.GetDirectPermissionIDsOfUserByID(userID, nil)
+	upIDs, _, err = s.PermissionRepository.GetDirectPermissionIDsOfUserByID(userID, nil)
 	if err != nil {
 		return false, err
 	}
 
 	var rIDs []uint
-	rIDs,_, err = s.RoleRepository.GetRoleIDsOfUser(userID, nil)
+	rIDs, _, err = s.RoleRepository.GetRoleIDsOfUser(userID, nil)
 	if err != nil {
 		return false, err
 	}
@@ -813,7 +791,6 @@ func (s *Permify) UserHasAllPermissions(userID uint, p interface{}) (b bool, err
 // @param interface{}
 // @return bool, error
 func (s *Permify) UserHasAnyPermissions(userID uint, p interface{}) (b bool, err error) {
-
 	var permissions collections.Permission
 	permissions, err = s.GetPermissions(p)
 	if err != nil {

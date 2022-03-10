@@ -1,12 +1,12 @@
 package repositories
 
 import (
-	`gorm.io/gorm`
+	"gorm.io/gorm"
 
-	`github.com/Permify/permify-gorm/collections`
-	`github.com/Permify/permify-gorm/models`
-	`github.com/Permify/permify-gorm/models/pivot`
-	`github.com/Permify/permify-gorm/repositories/scopes`
+	"github.com/Permify/permify-gorm/collections"
+	"github.com/Permify/permify-gorm/models"
+	"github.com/Permify/permify-gorm/models/pivot"
+	"github.com/Permify/permify-gorm/repositories/scopes"
 )
 
 // IPermissionRepository its data access layer abstraction of permission.
@@ -140,7 +140,6 @@ func (repository *PermissionRepository) Delete(permission *models.Permission) (e
 // @return func(db *gorm.DB) *gorm.DB
 func (repository *PermissionRepository) paginate(pagination scopes.GormPager) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-
 		if pagination != nil {
 			db.Scopes(pagination.ToPaginate())
 		}

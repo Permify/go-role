@@ -1,7 +1,7 @@
 package options
 
 import (
-	`github.com/Permify/permify-gorm/utils`
+	"github.com/Permify/permify-gorm/utils"
 )
 
 // PermissionOption represents options when fetching permissions.

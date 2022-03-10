@@ -1,7 +1,7 @@
 package models
 
 import (
-	`time`
+	"time"
 )
 
 // Role represents the database model of roles
