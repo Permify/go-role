@@ -8,14 +8,17 @@ This package allows you to manage user permissions and roles in your database.
 <br>
 
 <details>
-<summary>👇 Install</summary>
+<summary>👇 Setup</summary>
 <br>
+
+Install
 
 ```shell
 go get github.com/Permify/permify-gorm
 ```
 
 Import permify.
+
 ```go
 import permify `github.com/Permify/permify-gorm`
 ```
@@ -116,8 +119,20 @@ permissions, totalCount, err := p.GetDirectPermissionsOfUser(1, options.Permissi
 Controls
 
 ```go
-// // Does the user have the given permission? (including the permissions of the roles)
+// Does the role or any of the roles have given permission?
+can, err := permify.RoleHasPermission("admin", "edit user details")
+
+// Does the role or roles have any of the given permissions?
+can, err := permify.RoleHasAnyPermissions([]string{"admin", "manager"}, []string{"edit user details", "create contact"})
+
+// Does the role or roles have all the given permissions?
+can, err := permify.RoleHasAllPermissions("admin", []string{"edit user details", "create contact"})
+
+// Does the user have the given permission? (including the permissions of the roles)
 can, err := permify.UserHasPermission(1, "edit user details")
+
+// Does the user have the given permission? (not including the permissions of the roles)
+can, err := permify.UserHasDirectPermission(1, "edit user details")
 
 // Does the user have any of the given permissions? (including the permissions of the roles)
 can, err := permify.UserHasAnyPermissions(1, []uint{1, 2})
@@ -129,7 +144,6 @@ can, err := permify.UserHasAllRoles(1, []string{"admin", "manager"})
 can, err := permify.UserHasAnyRoles(1, []string{"admin", "manager"})
 ```
 
-
 </details>
 
 <br>
@@ -137,6 +151,8 @@ can, err := permify.UserHasAnyRoles(1, []string{"admin", "manager"})
 <details>
 <summary>🚘 Using permissions via roles</summary>
 <br>
+
+
 
 </details>
 
