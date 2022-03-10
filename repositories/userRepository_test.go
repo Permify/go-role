@@ -2,15 +2,16 @@ package repositories
 
 import (
 	"database/sql"
+	"regexp"
+
 	"github.com/DATA-DOG/go-sqlmock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	`regexp`
 
-	`github.com/Permify/permify-gorm/models`
-	`github.com/Permify/permify-gorm/models/pivot`
+	"github.com/Permify/permify-gorm/models"
+	"github.com/Permify/permify-gorm/models/pivot"
 )
 
 var _ = Describe("User Repository", func() {
@@ -45,8 +46,8 @@ var _ = Describe("User Repository", func() {
 	Context("Has Role", func() {
 		It("found", func() {
 			userRoles := pivot.UserRoles{
-				UserID:        1,
-				RoleID:        1,
+				UserID: 1,
+				RoleID: 1,
 			}
 
 			const sqlSelectOne = `SELECT count(*) FROM "user_roles" WHERE user_roles.user_id = $1 AND user_roles.role_id = $2`
@@ -54,12 +55,11 @@ var _ = Describe("User Repository", func() {
 			mock.ExpectQuery(regexp.QuoteMeta(sqlSelectOne)).
 				WithArgs(userRoles.UserID, userRoles.RoleID).
 				WillReturnRows(sqlmock.NewRows([]string{"count"}).
-				AddRow(1))
+					AddRow(1))
 
 			db, err := repository.HasRole(1, models.Role{ID: 1})
 			Expect(err).ShouldNot(HaveOccurred())
 			Expect(db).Should(Equal(true))
 		})
 	})
-
 })

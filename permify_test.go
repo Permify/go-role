@@ -1,18 +1,19 @@
 package permify_gorm
 
 import (
-	`database/sql`
-	`github.com/DATA-DOG/go-sqlmock`
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-	`gorm.io/driver/postgres`
-	`gorm.io/gorm`
-	`regexp`
+	"database/sql"
+	"regexp"
 	"testing"
 
-	`github.com/Permify/permify-gorm/helpers`
-	`github.com/Permify/permify-gorm/models`
-	`github.com/Permify/permify-gorm/repositories`
+	"github.com/DATA-DOG/go-sqlmock"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+
+	"github.com/Permify/permify-gorm/helpers"
+	"github.com/Permify/permify-gorm/models"
+	"github.com/Permify/permify-gorm/repositories"
 )
 
 var permify *Permify
@@ -42,7 +43,6 @@ var _ = Describe("Permify Service", func() {
 		})
 		gormDb, err = gorm.Open(dialector, &gorm.Config{})
 		Expect(err).ShouldNot(HaveOccurred())
-
 
 		roleRepository := &repositories.RoleRepository{Database: gormDb}
 		permissionRepository := &repositories.PermissionRepository{Database: gormDb}

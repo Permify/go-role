@@ -2,12 +2,13 @@ package repositories
 
 import (
 	"database/sql"
+	"regexp"
+
 	"github.com/DATA-DOG/go-sqlmock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"regexp"
 
 	"github.com/Permify/permify-gorm/models"
 )
@@ -99,5 +100,4 @@ var _ = Describe("Permission Repository", func() {
 			Expect(err).Should(Equal(gorm.ErrRecordNotFound))
 		})
 	})
-
 })
