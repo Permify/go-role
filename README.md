@@ -18,9 +18,8 @@ Install
 go get github.com/Permify/permify-gorm
 ```
 
-Run Tests
+Run All Tests
 
-Full package test
 ```shell
 go test ./...
 ```
@@ -164,8 +163,39 @@ can, err := permify.UserHasAnyRoles(1, []string{"admin", "manager"})
 
 ## 🚘 Using permissions via roles
 
+### Adding Role
 
+Add role or roles to user according to the role names or ids:
 
+```go
+// add one role to user
+err := permify.AddRolesToUser(1, "admin")
+
+// You can also add multiple roles at once
+err := permify.AddRolesToUser(1, []string{"admin", "manager"})
+// or
+err := permify.AddRolesToUser(1, []uint{1,2})
+```
+
+Replace the roles of the user according to the role names or ids:
+
+```go
+// remove all user roles and add admin role
+err := permify.ReplaceRolesToUser(1, "admin")
+
+// You can also replace multiple roles at once
+err := permify.ReplaceRolesToUser(1, []string{"admin", "manager"})
+// or
+err := permify.RemoveRolesFromUser(1, []uint{1,2})
+```
+
+Controls
+
+```go
+
+// does the user have the given role?
+can, err := permify.UserHasRole(1, "admin")
+```
 
 
 ## 🚤 Direct Permissions
