@@ -9,9 +9,15 @@ This package allows you to manage user permissions and roles in your database.
 
 <details>
 <summary>👇 Install</summary>
+<br>
 
 ```shell
 go get github.com/Permify/permify-gorm
+```
+
+Import permify.
+```go
+import permify `github.com/Permify/permify-gorm`
 ```
 
 Initialize the new Permify.
@@ -20,14 +26,13 @@ Initialize the new Permify.
 // initialize the database. (you can use all gorm's supported databases)
 db, _ := gorm.Open(mysql.Open("user:password@tcp(host:3306)/db?charset=utf8&parseTime=True&loc=Local"), &gorm.Config{})
 
-// initialize the Permify
-permify, _ := New(Options{
+// New initializer for Permify
+// If migration is true, it generate all tables in the database if they don't exist.
+p, _ := permify.New(permify.Options{
 	Migrate: true,
 	DB: db,
 })
 ```
-
-<br>
 
 </details>
 
@@ -50,15 +55,80 @@ err := permify.CreateRole("admin", "role description")
 err := permify.CreatePermission("edit user details", "")
 ```
 
-A permission or permissions can be added to a role using this method in different ways:
+A permissions can be added to a role using this method in different ways:
 
 ```go
-err := permify.AddPermissionsToRole(1, "edit user details")
+// first parameter is role id
+err := p.AddPermissionsToRole(1, "edit user details")
 // or
-err := permify.AddPermissionsToRole("admin", []string{"edit user details", "create contact"})
+err := p.AddPermissionsToRole("admin", []string{"edit user details", "create contact"})
 // or
-err := permify.AddPermissionsToRole("admin", []uint{1, 3})
+err := p.AddPermissionsToRole("admin", []uint{1, 3})
 ```
+
+Using these methods you can manage roles permissions removes and overwrites like the same above ways:
+
+```go
+// Overwrites the permissions of the role according to the permission names or ids.
+err := permify.ReplacePermissionsToRole("admin", []string{"edit user details", "create contact"})
+
+// remove permissions from role according to the permission names or ids.
+err := permify.RemovePermissionsFromRole("admin", []string{"edit user details"})
+```
+
+Basic fetch queries:
+
+```go
+// Fetch all the roles. (with pagination option).
+// If withPermissions is true, it will preload the permissions to the role.
+// If pagination is nil, it returns without paging.
+roles, totalCount, err := permify.GetAllRoles(options.RoleOption{
+	WithPermissions: true,
+	Pagination: &utils.Pagination{
+		Page: 1,
+		Limit: 1,
+	},
+})
+
+// without paging.
+
+roles, totalCount, err := permify.GetAllRoles(options.RoleOption{
+    WithPermissions: false,
+})
+
+// The data returned is a collection of roles. Collections provides a fluent convenient wrapper for working with arrays of data.
+fmt.Println(roles.IDs())
+fmt.Println(roles.Names())
+fmt.Println(roles.Permissions().Names())
+
+// Fetch all permissions of the user that come with direct and roles.
+permissions, _ := permify.GetAllPermissionsOfUser(1)
+
+// Fetch all direct permissions of the user. (with pagination option)
+permissions, totalCount, err := p.GetDirectPermissionsOfUser(1, options.PermissionOption{
+    Pagination: &utils.Pagination{
+        Page: 1,
+        Limit: 10,
+    },
+})
+```
+
+Controls
+
+```go
+// // Does the user have the given permission? (including the permissions of the roles)
+can, err := permify.UserHasPermission(1, "edit user details")
+
+// Does the user have any of the given permissions? (including the permissions of the roles)
+can, err := permify.UserHasAnyPermissions(1, []uint{1, 2})
+
+// Does the user have all the given roles?
+can, err := permify.UserHasAllRoles(1, []string{"admin", "manager"})
+
+// Does the user have any of the given roles?
+can, err := permify.UserHasAnyRoles(1, []string{"admin", "manager"})
+```
+
 
 </details>
 
@@ -89,8 +159,6 @@ err := permify.AddPermissionsToRole("admin", []uint{1, 3})
 <br>
 
 <h2 align="left">:heart: Let's get connected:</h2>
-
------
 
 <p align="left">
 <a href="https://twitter.com/GetPermify">
