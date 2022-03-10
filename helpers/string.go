@@ -5,8 +5,7 @@ import (
 	`reflect`
 )
 
-// Guard
-// edits the given string.
+// Guard edits the given string.
 // example: 'create $#% contact' -> 'create-contact'.
 // @param string
 // @param string
@@ -15,8 +14,7 @@ func Guard(b string) string {
 	return slug.Make(b)
 }
 
-// GuardArray
-// edits the given string array.
+// GuardArray edits the given string array.
 // example: 'create $#% contact' -> 'create-contact'.
 // @param []string
 // return []string
@@ -27,8 +25,7 @@ func GuardArray(b []string) (guardArray []string) {
 	return
 }
 
-// IsInt
-// Is the given value an integer?
+// IsInt is the given value an integer?
 // @param interface{}
 // return bool
 func IsInt(value interface{}) bool {
@@ -38,8 +35,7 @@ func IsInt(value interface{}) bool {
 	return false
 }
 
-// IsUIntArray
-// Is the given value an unsigned integer array?
+// IsUIntArray is the given value an unsigned integer array?
 // @param interface{}
 // return bool
 func IsUIntArray(value interface{}) bool {
@@ -53,8 +49,7 @@ func IsUIntArray(value interface{}) bool {
 	return false
 }
 
-// IsString
-// Is the given value an string?
+// IsString is the given value an string?
 // @param interface{}
 // return bool
 func IsString(value interface{}) bool {
@@ -64,8 +59,7 @@ func IsString(value interface{}) bool {
 	return false
 }
 
-// IsStringArray
-// Is the given value an string array?
+// IsStringArray is the given value an string array?
 // @param interface{}
 // return bool
 func IsStringArray(value interface{}) bool {
@@ -79,8 +73,7 @@ func IsStringArray(value interface{}) bool {
 	return false
 }
 
-// IsArray
-// Is the given value an array?
+// IsArray is the given value an array?
 // @param interface{}
 // return bool
 func IsArray(value interface{}) bool {
