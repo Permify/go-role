@@ -165,7 +165,7 @@ can, err := permify.UserHasAnyRoles(1, []string{"admin", "manager"})
 
 ### Adding Role
 
-Add role or roles to user according to the role names or ids:
+Add roles to user according to the role names or ids:
 
 ```go
 // add one role to user
@@ -189,20 +189,183 @@ err := permify.ReplaceRolesToUser(1, []string{"admin", "manager"})
 err := permify.RemoveRolesFromUser(1, []uint{1,2})
 ```
 
-Controls
+Remove the roles of the user according to the role names or ids:
 
 ```go
+// remove one role to user
+err := permify.RemoveRolesFromUser(1, "admin")
 
-// does the user have the given role?
-can, err := permify.UserHasRole(1, "admin")
+// You can also remove multiple roles at once
+err := permify.RemoveRolesFromUser(1, []string{"admin", "manager"})
+// or
+err := permify.RemoveRolesFromUser(1, []uint{1,2})
 ```
 
+Control Roles
+
+```go
+// does the user have the given role?
+can, err := permify.UserHasRole(1, "admin")
+
+// does the user have all the given roles?
+can, err := permify.UserHasAllRoles(1, []string{"admin", "manager"})
+
+// does the user have any of the given roles?
+can, err := permify.UserHasAnyRoles(1, []string{"admin", "manager"})
+```
+
+Get User's Roles
+
+```go
+roles, totalCount, err := permify.GetRolesOfUser(1, options.RoleOption{
+    WithPermissions: true, // preload role's permissions
+    Pagination: &utils.Pagination{
+        Page: 1,
+        Limit: 1,
+    },
+})
+
+// The data returned is a collection of roles. Collections provides a fluent convenient wrapper for working with arrays of data.
+fmt.Println(roles.IDs())
+fmt.Println(roles.Names())
+fmt.Println(roles.Len())
+fmt.Println(roles.Permissions().Names())
+```
+
+Add Permissions to Roles
+
+```go
+// add one permission to role
+// First parameter can be role name or id, second parameter can be permission name(s) or id(s).
+err := permify.AddPermissionsToRole("admin", "edit contact details")
+
+// You can also add multiple permissions at once
+err := permify.AddPermissionsToRole("admin", []string{"edit contact details", "delete user"})
+// or
+err := permify.AddPermissionsToRole("admin", []uint{1, 2})
+```
+
+Remove Permissions from Roles
+
+```go
+// remove one permission to role
+err := permify.RemovePermissionsFromRole("admin", "edit contact details")
+
+// You can also add multiple permissions at once
+err := permify.RemovePermissionsFromRole("admin", []string{"edit contact details", "delete user"})
+// or
+err := permify.RemovePermissionsFromRole("admin", []uint{1, 2})
+```
+
+Control Role's Permissions
+
+```go
+// does the role or any of the roles have given permission?
+can, err := permify.RoleHasPermission([]string{"admin", "manager"}, "edit contact details")
+
+// does the role or roles have all the given permissions?
+can, err := permify.RoleHasAllPermissions("admin", []string{"edit contact details", "delete contact"})
+
+// does the role or roles have any of the given permissions?
+can, err := permify.RoleHasAnyPermissions(1, []string{"edit contact details", "delete contact"})
+```
+
+Get Role's Permissions
+
+```go
+permissions, totalCount, err := permify.GetPermissionsOfRoles([]string{"admin", "manager"}, options.PermissionOption{
+    Pagination: &utils.Pagination{
+        Page: 1,
+        Limit: 1,
+    },
+})
+
+// The data returned is a collection of permissions. Collections provides a fluent convenient wrapper for working with arrays of data.
+fmt.Println(permissions.IDs())
+fmt.Println(permissions.Names())
+fmt.Println(permissions.Len())
+```
 
 ## 🚤 Direct Permissions
 
+### Adding Direct Permissions
 
+Add direct permission or permissions to user according to the permission names or ids.
 
+```go
+// add one permission to user
+err := permify.AddPermissionsToUser(1, "edit contact details")
 
+// You can also add multiple permissions at once
+err := permify.AddPermissionsToUser(1, []string{"edit contact details", "create contact"})
+// or
+err := permify.AddPermissionsToUser(1, []uint{1,2})
+```
+
+Remove the roles of the user according to the role names or ids:
+
+```go
+// remove one role to user
+err := permify.RemovePermissionsFromUser(1, "edit contact details")
+
+// You can also remove multiple permissions at once
+err := permify.RemovePermissionsFromUser(1, []string{"edit contact details", "create contact"})
+// or
+err := permify.RemovePermissionsFromUser(1, []uint{1,2})
+```
+
+Control Permissions
+
+```go
+// ALL PERMISSIONS
+
+// does the user have the given permission? (including the permissions of the roles)
+can, err := permify.UserHasPermission(1, "edit contact details")
+
+// does the user have all the given permissions? (including the permissions of the roles)
+can, err := permify.UserHasAllPermissions(1, []string{"edit contact details", "delete contact"})
+
+// does the user have any of the given permissions? (including the permissions of the roles).
+can, err := permify.UserHasAnyPermissions(1, []string{"edit contact details", "delete contact"})
+
+// DIRECT PERMISSIONS
+
+// does the user have the given permission? (not including the permissions of the roles)
+can, err := permify.UserHasDirectPermission(1, "edit contact details")
+
+// does the user have all the given permissions? (not including the permissions of the roles)
+can, err := permify.UserHasAllDirectPermissions(1, []string{"edit contact details", "delete contact"})
+
+// does the user have any of the given permissions? (not including the permissions of the roles)
+can, err := permify.UserHasAnyDirectPermissions(1, []string{"edit contact details", "delete contact"})
+```
+
+Get User's All Permissions
+
+```go
+permissions, err := permify.GetAllPermissionsOfUser(1)
+
+// The data returned is a collection of permissions. Collections provides a fluent convenient wrapper for working with arrays of data.
+fmt.Println(permissions.IDs())
+fmt.Println(permissions.Names())
+fmt.Println(permissions.Len())
+```
+
+Get User's Direct Permissions
+
+```go
+permissions, totalCount, err := permify.GetDirectPermissionsOfUser(1, options.PermissionOption{
+    Pagination: &utils.Pagination{
+        Page:  1,
+        Limit: 10,
+    },
+})
+
+// The data returned is a collection of permissions. Collections provides a fluent convenient wrapper for working with arrays of data.
+fmt.Println(permissions.IDs())
+fmt.Println(permissions.Names())
+fmt.Println(permissions.Len())
+```
 
 ## 🚀 Using your user model
 
@@ -219,7 +382,7 @@ type User struct {
     Name string
 
     // permify
-    Roles []models.Role `gorm:"many2many:user_roles;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+    Roles       []models.Role       `gorm:"many2many:user_roles;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
     Permissions []models.Permission `gorm:"many2many:user_permissions;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }
 ```
