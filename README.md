@@ -1,6 +1,10 @@
 
 ![permify-gorm](https://user-images.githubusercontent.com/39353278/157410086-42e02752-d5a9-4c64-bdc3-d3a203a247d7.png)
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/Permify/permify-gorm)](https://goreportcard.com/report/github.com/Permify/permify-gorm)
+
+[![Coverage Status](https://coveralls.io/repos/github/Permify/permify-gorm/badge.svg?branch=master)](https://coveralls.io/github/Permify/permify-gorm?branch=master)
+
 ## Role Based Access Control (RBAC) for your go application
 
 This package allows you to manage user permissions and roles in your database.
@@ -87,7 +91,6 @@ roles, totalCount, err := permify.GetAllRoles(options.RoleOption{
 })
 
 // without paging.
-
 roles, totalCount, err := permify.GetAllRoles(options.RoleOption{
     WithPermissions: false,
 })
@@ -138,32 +141,27 @@ can, err := permify.UserHasAnyRoles(1, []string{"admin", "manager"})
 ```
 
 
-<details>
-
-<summary>🚘 Using permissions via roles</summary>
-<br>
+## 🚘 Using permissions via roles
 
 
 
-</details>
 
-<br>
 
-<details>
-<summary>🚤 Direct Permissions</summary>
-<br>
+## 🚤 Direct Permissions
 
-</details>
 
-<br>
 
-<details>
-<summary>🚀 Using your user model</summary>
-<br>
 
-</details>
 
-<br>
+## 🚀 Using your user model
+
+
+
+
+
+## ⁉️ Error Handling
+
+
 
 <h2 align="left">:heart: Let's get connected:</h2>
 
