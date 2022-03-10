@@ -179,17 +179,17 @@ can, err := permify.UserHasAnyRoles(1, []string{"admin", "manager"})
 You can create the relationships between the user and the role and permissions in this manner. In this way:
 
 - You can manage user preloads
-- You can create foreign key between users and pivot tables (user_roles, user permissions).
+- You can create foreign key between users and pivot tables (user_roles, user_permissions).
 
 ```go
 import models `github.com/Permify/permify-gorm/models`
 
 type User struct {
     gorm.Model
-	Name string
+    Name string
 
     // permify
-	Roles []models.Role `gorm:"many2many:user_roles;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+    Roles []models.Role `gorm:"many2many:user_roles;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
     Permissions []models.Permission `gorm:"many2many:user_permissions;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }
 ```
