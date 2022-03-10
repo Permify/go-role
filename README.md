@@ -414,6 +414,14 @@ if errors.Is(err, gorm.ErrRecordNotFound) {
 
 [Errors List](https://github.com/go-gorm/gorm/blob/master/errors.go)
 
+
+## Need More, Check Out our API
+
+Permify API is an authorization API which you can add complex rbac and abac solutions.
+
+[<img src="https://user-images.githubusercontent.com/39353278/157747851-ea8462be-60a4-498e-872a-e44cf42411b0.png" width="419px" />](https://www.permify.co/get-started)
+
+
 <h2 align="left">:heart: Let's get connected:</h2>
 
 <p align="left">
