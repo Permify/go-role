@@ -1,4 +1,4 @@
-package models_pivot
+package pivot
 
 // UserRoles represents the database model of user roles relationships
 type UserRoles struct {

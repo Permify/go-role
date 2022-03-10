@@ -4,8 +4,7 @@ import (
 	`reflect`
 )
 
-// InArray
-// Is the value in the first parameter an element of the array in the second parameter?
+// InArray is the value in the first parameter an element of the array in the second parameter?
 // @param interface{}
 // @param interface{}
 // return bool
@@ -24,8 +23,7 @@ func InArray(val interface{}, array interface{}) (exists bool) {
 	return
 }
 
-// JoinUintArrays
-// Concatenates the given uint arrays and makes them a single array.
+// JoinUintArrays concatenates the given uint arrays and makes them a single array.
 // @param ...[]uint
 // return []uint
 func JoinUintArrays(array ...[]uint) (j []uint) {
@@ -37,8 +35,7 @@ func JoinUintArrays(array ...[]uint) (j []uint) {
 	return
 }
 
-// RemoveDuplicateValues
-// Make singular of repeating values in an array
+// RemoveDuplicateValues make singular of repeating values in an array.
 // @param []uint
 // return []uint
 func RemoveDuplicateValues(intSlice []uint) []uint {

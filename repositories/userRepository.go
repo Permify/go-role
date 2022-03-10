@@ -6,11 +6,10 @@ import (
 
 	`github.com/Permify/permify-gorm/collections`
 	`github.com/Permify/permify-gorm/models`
-	models_pivot `github.com/Permify/permify-gorm/models/models.pivot`
+	`github.com/Permify/permify-gorm/models/pivot`
 )
 
-// IUserRepository
-// Its data access layer abstraction of user
+// IUserRepository its data access layer abstraction of user.
 type IUserRepository interface {
 
 	// actions
@@ -36,26 +35,24 @@ type IUserRepository interface {
 	HasAnyDirectPermissions(userID uint, permissions collections.Permission) (b bool, err error)
 }
 
-// UserRepository
-// Its data access layer of user
+// UserRepository its data access layer of user.
 type UserRepository struct {
 	Database *gorm.DB
 }
 
 // ACTIONS
 
-// AddPermissions
-// Add direct permissions to user.
+// AddPermissions add direct permissions to user.
 // @param uint
 // @param collections.Permission
 // @return error
 func (repository *UserRepository) AddPermissions(userID uint, permissions collections.Permission) error {
 	return repository.Database.Transaction(func(tx *gorm.DB) error {
 
-		var ups []models_pivot.UserPermissions
+		var ups []pivot.UserPermissions
 
 		for _, p := range permissions.Origin() {
-			ups = append(ups, models_pivot.UserPermissions{
+			ups = append(ups, pivot.UserPermissions{
 				UserID:       userID,
 				PermissionID: p.ID,
 			})
@@ -70,23 +67,22 @@ func (repository *UserRepository) AddPermissions(userID uint, permissions collec
 	})
 }
 
-// ReplacePermissions
-// Replace direct permissions of user.
+// ReplacePermissions replace direct permissions of user.
 // @param uint
 // @param collections.Permission
 // @return error
 func (repository *UserRepository) ReplacePermissions(userID uint, permissions collections.Permission) error {
 	return repository.Database.Transaction(func(tx *gorm.DB) error {
 
-		if err := tx.Where("user_permissions.user_id = ?", userID).Delete(&models_pivot.UserPermissions{}).Error; err != nil {
+		if err := tx.Where("user_permissions.user_id = ?", userID).Delete(&pivot.UserPermissions{}).Error; err != nil {
 			tx.Rollback()
 			return err
 		}
 
-		var ups []models_pivot.UserPermissions
+		var ups []pivot.UserPermissions
 
 		for _, p := range permissions.Origin() {
-			ups = append(ups, models_pivot.UserPermissions{
+			ups = append(ups, pivot.UserPermissions{
 				UserID:       userID,
 				PermissionID: p.ID,
 			})
@@ -101,18 +97,17 @@ func (repository *UserRepository) ReplacePermissions(userID uint, permissions co
 	})
 }
 
-// RemovePermissions
-// Remove direct permissions from user.
+// RemovePermissions remove direct permissions of user.
 // @param uint
 // @param collections.Permission
 // @return error
 func (repository *UserRepository) RemovePermissions(userID uint, permissions collections.Permission) error {
 	return repository.Database.Transaction(func(tx *gorm.DB) error {
 
-		var ups []models_pivot.UserPermissions
+		var ups []pivot.UserPermissions
 
 		for _, p := range permissions.Origin() {
-			ups = append(ups, models_pivot.UserPermissions{
+			ups = append(ups, pivot.UserPermissions{
 				UserID:       userID,
 				PermissionID: p.ID,
 			})
@@ -127,24 +122,22 @@ func (repository *UserRepository) RemovePermissions(userID uint, permissions col
 	})
 }
 
-// ClearPermissions
-// Remove all direct permissions from user.
+// ClearPermissions remove all direct permissions of user.
 // @param uint
 // @return error
 func (repository *UserRepository) ClearPermissions(userID uint) (err error) {
-	return repository.Database.Where("user_permissions.user_id = ?", userID).Delete(&models_pivot.UserPermissions{}).Error
+	return repository.Database.Where("user_permissions.user_id = ?", userID).Delete(&pivot.UserPermissions{}).Error
 }
 
-// AddRoles
-// Add roles to user.
+// AddRoles add roles to user.
 // @param uint
 // @param collections.Role
 // @return error
 func (repository *UserRepository) AddRoles(userID uint, roles collections.Role) error {
 	return repository.Database.Transaction(func(tx *gorm.DB) error {
-		var ur []models_pivot.UserRoles
+		var ur []pivot.UserRoles
 		for _, r := range roles.Origin() {
-			ur = append(ur, models_pivot.UserRoles{
+			ur = append(ur, pivot.UserRoles{
 				UserID: userID,
 				RoleID: r.ID,
 			})
@@ -157,20 +150,19 @@ func (repository *UserRepository) AddRoles(userID uint, roles collections.Role) 
 	})
 }
 
-// ReplaceRoles
-// Replace roles of user.
+// ReplaceRoles replace roles of user.
 // @param uint
 // @param collections.Role
 // @return error
 func (repository *UserRepository) ReplaceRoles(userID uint, roles collections.Role) error {
 	return repository.Database.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Where("user_roles.user_id = ?", userID).Delete(&models_pivot.UserRoles{}).Error; err != nil {
+		if err := tx.Where("user_roles.user_id = ?", userID).Delete(&pivot.UserRoles{}).Error; err != nil {
 			tx.Rollback()
 			return err
 		}
-		var ur []models_pivot.UserRoles
+		var ur []pivot.UserRoles
 		for _, r := range roles.Origin() {
-			ur = append(ur, models_pivot.UserRoles{
+			ur = append(ur, pivot.UserRoles{
 				UserID: userID,
 				RoleID: r.ID,
 			})
@@ -183,16 +175,15 @@ func (repository *UserRepository) ReplaceRoles(userID uint, roles collections.Ro
 	})
 }
 
-// RemoveRoles
-// Remove roles from user.
+// RemoveRoles remove roles of user.
 // @param uint
 // @param collections.Role
 // @return error
 func (repository *UserRepository) RemoveRoles(userID uint, roles collections.Role) error {
 	return repository.Database.Transaction(func(tx *gorm.DB) error {
-		var ur []models_pivot.UserRoles
+		var ur []pivot.UserRoles
 		for _, r := range roles.Origin() {
-			ur = append(ur, models_pivot.UserRoles{
+			ur = append(ur, pivot.UserRoles{
 				UserID: userID,
 				RoleID: r.ID,
 			})
@@ -205,18 +196,16 @@ func (repository *UserRepository) RemoveRoles(userID uint, roles collections.Rol
 	})
 }
 
-// ClearRoles
-// Remove all roles from user.
+// ClearRoles remove all roles of user.
 // @param uint
 // @return error
 func (repository *UserRepository) ClearRoles(userID uint) (err error) {
-	return repository.Database.Where("user_roles.user_id = ?", userID).Delete(&models_pivot.UserRoles{}).Error
+	return repository.Database.Where("user_roles.user_id = ?", userID).Delete(&pivot.UserRoles{}).Error
 }
 
 // CONTROLS
 
-// HasRole
-// Does the user have the given role?
+// HasRole does the user have the given role?
 // @param uint
 // @param models.Role
 // @return bool, error
@@ -226,8 +215,7 @@ func (repository *UserRepository) HasRole(userID uint, role models.Role) (b bool
 	return count > 0, err
 }
 
-// HasAllRoles
-// Does the user have all the given roles?
+// HasAllRoles does the user have all the given roles?
 // @param uint
 // @param collections.Role
 // @return bool, error
@@ -237,8 +225,7 @@ func (repository *UserRepository) HasAllRoles(userID uint, roles collections.Rol
 	return roles.Len() == count, err
 }
 
-// HasAnyRoles
-// Does the user have any of the given roles?
+// HasAnyRoles does the user have any of the given roles?
 // @param uint
 // @param collections.Role
 // @return bool, error
@@ -248,8 +235,7 @@ func (repository *UserRepository) HasAnyRoles(userID uint, roles collections.Rol
 	return count > 0, err
 }
 
-// HasDirectPermission
-// Does the user have the given permission? (not including the permissions of the roles)
+// HasDirectPermission does the user have the given permission? (not including the permissions of the roles)
 // @param uint
 // @param collections.Permission
 // @return bool, error
@@ -259,8 +245,7 @@ func (repository *UserRepository) HasDirectPermission(userID uint, permission mo
 	return count > 0, err
 }
 
-// HasAllDirectPermissions
-// Does the user have all the given permissions? (not including the permissions of the roles)
+// HasAllDirectPermissions does the user have all the given permissions? (not including the permissions of the roles)
 // @param uint
 // @param collections.Permission
 // @return bool, error
@@ -270,8 +255,7 @@ func (repository *UserRepository) HasAllDirectPermissions(userID uint, permissio
 	return permissions.Len() == count, err
 }
 
-// HasAnyDirectPermissions
-// Does the user have any of the given permissions? (not including the permissions of the roles)
+// HasAnyDirectPermissions does the user have any of the given permissions? (not including the permissions of the roles)
 // @param uint
 // @param collections.Permission
 // @return bool, error

@@ -5,12 +5,11 @@ import (
 
 	`github.com/Permify/permify-gorm/collections`
 	`github.com/Permify/permify-gorm/models`
-	models_pivot `github.com/Permify/permify-gorm/models/models.pivot`
-	repositories_scopes `github.com/Permify/permify-gorm/repositories/repositories.scopes`
+	`github.com/Permify/permify-gorm/models/pivot`
+	`github.com/Permify/permify-gorm/repositories/scopes`
 )
 
-// IPermissionRepository
-// Its data access layer abstraction of permission
+// IPermissionRepository its data access layer abstraction of permission.
 type IPermissionRepository interface {
 	Migratable
 
@@ -26,9 +25,9 @@ type IPermissionRepository interface {
 
 	// ID fetch options
 
-	GetPermissionIDs(pagination repositories_scopes.GormPager) (permissionIDs []uint, totalCount int64, err error)
-	GetDirectPermissionIDsOfUserByID(userID uint, pagination repositories_scopes.GormPager) (permissionIDs []uint, totalCount int64, err error)
-	GetPermissionIDsOfRolesByIDs(roleIDs []uint, pagination repositories_scopes.GormPager) (permissionIDs []uint, totalCount int64, err error)
+	GetPermissionIDs(pagination scopes.GormPager) (permissionIDs []uint, totalCount int64, err error)
+	GetDirectPermissionIDsOfUserByID(userID uint, pagination scopes.GormPager) (permissionIDs []uint, totalCount int64, err error)
+	GetPermissionIDsOfRolesByIDs(roleIDs []uint, pagination scopes.GormPager) (permissionIDs []uint, totalCount int64, err error)
 
 	// FirstOrCreate & Updates & Delete
 
@@ -37,25 +36,20 @@ type IPermissionRepository interface {
 	Delete(permission *models.Permission) (err error)
 }
 
-// PermissionRepository
-// Its data access layer of permission
+// PermissionRepository its data access layer of permission.
 type PermissionRepository struct {
 	Database *gorm.DB
 }
 
-// Migrate
-// Generate tables from the database
+// Migrate generate tables from the database.
 // @return error
 func (repository *PermissionRepository) Migrate() (err error) {
 	err = repository.Database.AutoMigrate(models.Permission{})
-	err = repository.Database.AutoMigrate(models_pivot.UserPermissions{})
+	err = repository.Database.AutoMigrate(pivot.UserPermissions{})
 	return
 }
 
-// SINGLE FETCH OPTIONS
-
-// GetPermissionByID
-// Get permission by id.
+// GetPermissionByID get permission by id.
 // @param uint
 // @return models.Permission, error
 func (repository *PermissionRepository) GetPermissionByID(ID uint) (permission models.Permission, err error) {
@@ -63,8 +57,7 @@ func (repository *PermissionRepository) GetPermissionByID(ID uint) (permission m
 	return
 }
 
-// GetPermissionByGuardName
-// Get permission by guard name.
+// GetPermissionByGuardName get permission by guard name.
 // @param string
 // @return models.Permission, error
 func (repository *PermissionRepository) GetPermissionByGuardName(guardName string) (permission models.Permission, err error) {
@@ -74,8 +67,7 @@ func (repository *PermissionRepository) GetPermissionByGuardName(guardName strin
 
 // MULTIPLE FETCH OPTIONS
 
-// GetPermissions
-// Get permissions by ids.
+// GetPermissions get permissions by ids.
 // @param []uint
 // @return collections.Role, error
 func (repository *PermissionRepository) GetPermissions(IDs []uint) (permissions collections.Permission, err error) {
@@ -83,8 +75,7 @@ func (repository *PermissionRepository) GetPermissions(IDs []uint) (permissions 
 	return
 }
 
-// GetPermissionsByGuardNames
-// Get permissions by guard names.
+// GetPermissionsByGuardNames get permissions by guard names.
 // @param []string
 // @return collections.Permission, error
 func (repository *PermissionRepository) GetPermissionsByGuardNames(guardNames []string) (permissions collections.Permission, err error) {
@@ -94,47 +85,42 @@ func (repository *PermissionRepository) GetPermissionsByGuardNames(guardNames []
 
 // ID FETCH OPTIONS
 
-// GetPermissionIDs
-// Get permission ids. (with pagination)
+// GetPermissionIDs get permission ids. (with pagination)
 // @param repositories_scopes.GormPager
 // @return []uint, int64, error
-func (repository *PermissionRepository) GetPermissionIDs(pagination repositories_scopes.GormPager) (permissionIDs []uint, totalCount int64, err error) {
+func (repository *PermissionRepository) GetPermissionIDs(pagination scopes.GormPager) (permissionIDs []uint, totalCount int64, err error) {
 	err = repository.Database.Model(&models.Permission{}).Count(&totalCount).Scopes(repository.paginate(pagination)).Pluck("permissions.id", &permissionIDs).Error
 	return
 }
 
-// GetDirectPermissionIDsOfUserByID
-// Get direct permission ids of user. (with pagination)
+// GetDirectPermissionIDsOfUserByID get direct permission ids of user. (with pagination)
 // @param uint
 // @param repositories_scopes.GormPager
 // @return []uint, int64, error
-func (repository *PermissionRepository) GetDirectPermissionIDsOfUserByID(userID uint, pagination repositories_scopes.GormPager) (permissionIDs []uint, totalCount int64, err error) {
+func (repository *PermissionRepository) GetDirectPermissionIDsOfUserByID(userID uint, pagination scopes.GormPager) (permissionIDs []uint, totalCount int64, err error) {
 	err = repository.Database.Table("user_permissions").Where("user_permissions.user_id = ?", userID).Count(&totalCount).Scopes(repository.paginate(pagination)).Pluck("user_permissions.permission_id", &permissionIDs).Error
 	return
 }
 
-// GetPermissionIDsOfRolesByIDs
-// Get permission ids of roles. (with pagination)
+// GetPermissionIDsOfRolesByIDs get permission ids of roles. (with pagination)
 // @param []uint
 // @param repositories_scopes.GormPager
 // @return []uint, int64, error
-func (repository *PermissionRepository) GetPermissionIDsOfRolesByIDs(roleIDs []uint, pagination repositories_scopes.GormPager) (permissionIDs []uint, totalCount int64, err error) {
+func (repository *PermissionRepository) GetPermissionIDsOfRolesByIDs(roleIDs []uint, pagination scopes.GormPager) (permissionIDs []uint, totalCount int64, err error) {
 	err = repository.Database.Table("role_permissions").Distinct("role_permissions.permission_id").Where("role_permissions.role_id IN (?)", roleIDs).Count(&totalCount).Scopes(repository.paginate(pagination)).Pluck("role_permissions.permission_id", &permissionIDs).Error
 	return
 }
 
 // FirstOrCreate & Updates & Delete
 
-// FirstOrCreate
-// Create new permission if name not exist.
+// FirstOrCreate create new permission if name not exist.
 // @param *models.Permission
 // @return error
 func (repository *PermissionRepository) FirstOrCreate(permission *models.Permission) error {
 	return repository.Database.Where(models.Role{GuardName: permission.GuardName}).FirstOrCreate(permission).Error
 }
 
-// Updates
-// Update permission.
+// Updates update permission.
 // @param *models.Permission
 // @param map[string]interface{}
 // @return error
@@ -142,23 +128,17 @@ func (repository *PermissionRepository) Updates(permission *models.Permission, u
 	return repository.Database.Model(permission).Updates(updates).Error
 }
 
-// Delete
-// Delete permission.
+// Delete delete permission.
 // @param *models.Permission
 // @return error
 func (repository *PermissionRepository) Delete(permission *models.Permission) (err error) {
 	return repository.Database.Delete(permission).Error
 }
 
-/**
- * Scopes
- *
- */
-
-// paginate
+// paginate pagging if pagination option is true.
 // @param repositories_scopes.GormPager
 // @return func(db *gorm.DB) *gorm.DB
-func (repository *PermissionRepository) paginate(pagination repositories_scopes.GormPager) func(db *gorm.DB) *gorm.DB {
+func (repository *PermissionRepository) paginate(pagination scopes.GormPager) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 
 		if pagination != nil {

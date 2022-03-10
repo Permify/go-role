@@ -9,7 +9,7 @@ import (
 	`github.com/Permify/permify-gorm/models`
 	`github.com/Permify/permify-gorm/options`
 	`github.com/Permify/permify-gorm/repositories`
-	repositories_scopes `github.com/Permify/permify-gorm/repositories/repositories.scopes`
+	`github.com/Permify/permify-gorm/repositories/scopes`
 )
 
 var (
@@ -53,8 +53,7 @@ type Permify struct {
 
 // ROLE
 
-// GetRole
-// Fetch role according to the role name or id.
+// GetRole fetch role according to the role name or id.
 // If withPermissions is true, it will preload the permissions to the role.
 // First parameter is can be role name or id, second parameter is boolean.
 // If the given variable is an array, the first element of the given array is returned.
@@ -92,8 +91,7 @@ func (s *Permify) GetRole(r interface{}, withPermissions bool) (role models.Role
 	return models.Role{}, errUnsupportedValueType
 }
 
-// GetRoles
-// Fetch roles according to the role names or ids.
+// GetRoles fetch roles according to the role names or ids.
 // First parameter is can be role name(s) or id(s), second parameter is boolean.
 // If withPermissions is true, it will preload the permissions to the roles.
 // @param interface{}
@@ -128,8 +126,7 @@ func (s *Permify) GetRoles(r interface{}, withPermissions bool) (roles collectio
 	return collections.Role{}, errUnsupportedValueType
 }
 
-// GetAllRoles
-// Fetch all the roles. (with pagination option).
+// GetAllRoles fetch all the roles. (with pagination option).
 // If withPermissions is true, it will preload the permissions to the role.
 // First parameter is role option.
 // @param options.RoleOption
@@ -139,14 +136,13 @@ func (s *Permify) GetAllRoles(option options.RoleOption) (roles collections.Role
 	if option.Pagination == nil {
 		roleIDs, totalCount, err = s.RoleRepository.GetRoleIDs(nil)
 	} else {
-		roleIDs, totalCount, err = s.RoleRepository.GetRoleIDs(&repositories_scopes.GormPagination{Pagination: option.Pagination.Get()})
+		roleIDs, totalCount, err = s.RoleRepository.GetRoleIDs(&scopes.GormPagination{Pagination: option.Pagination.Get()})
 	}
 	roles, err = s.GetRoles(roleIDs, option.WithPermissions)
 	return
 }
 
-// GetRolesOfUser
-// Fetch all the roles of the user. (with pagination option).
+// GetRolesOfUser fetch all the roles of the user. (with pagination option).
 // If withPermissions is true, it will preload the permissions to the role.
 // First parameter is user id, second parameter is role option.
 // @param uint
@@ -157,14 +153,13 @@ func (s *Permify) GetRolesOfUser(userID uint, option options.RoleOption) (roles 
 	if option.Pagination == nil {
 		roleIDs, totalCount, err = s.RoleRepository.GetRoleIDsOfUser(userID, nil)
 	} else {
-		roleIDs, totalCount, err = s.RoleRepository.GetRoleIDsOfUser(userID, &repositories_scopes.GormPagination{Pagination: option.Pagination.Get()})
+		roleIDs, totalCount, err = s.RoleRepository.GetRoleIDsOfUser(userID, &scopes.GormPagination{Pagination: option.Pagination.Get()})
 	}
 	roles, err = s.GetRoles(roleIDs, option.WithPermissions)
 	return
 }
 
-// CreateRole
-// Create new role
+// CreateRole create new role.
 // Name parameter is converted to guard name. example: senior $#% associate -> senior-associate.
 // If a role with the same name has been created before, it will not create it again. (FirstOrCreate)
 // First parameter is role name, second parameter is role description.
@@ -179,8 +174,7 @@ func (s *Permify) CreateRole(name string, description string) (err error) {
 	})
 }
 
-// DeleteRole
-// Delete role
+// DeleteRole delete role.
 // If the role is in use, its relations from the pivot tables are deleted.
 // First parameter can be role name or id.
 // @param interface{}
@@ -194,8 +188,7 @@ func (s *Permify) DeleteRole(r interface{}) (err error) {
 	return s.RoleRepository.Delete(&role)
 }
 
-// AddPermissionsToRole
-// Add permission to role.
+// AddPermissionsToRole add permission to role.
 // First parameter can be role name or id, second parameter can be permission name(s) or id(s).
 // If the first parameter is an array, the first element of the first parameter is used.
 // @param interface{}
@@ -222,8 +215,7 @@ func (s *Permify) AddPermissionsToRole(r interface{}, p interface{}) (err error)
 	return
 }
 
-// ReplacePermissionsToRole
-// Overwrites the permissions of the role according to the permission names or ids.
+// ReplacePermissionsToRole overwrites the permissions of the role according to the permission names or ids.
 // First parameter can be role name or id, second parameter can be permission name(s) or id(s).
 // If the first parameter is an array, the first element of the first parameter is used.
 // @param interface{}
@@ -250,8 +242,7 @@ func (s *Permify) ReplacePermissionsToRole(r interface{}, p interface{}) (err er
 	return
 }
 
-// RemovePermissionsFromRole
-// remove permissions from role according to the permission names or ids.
+// RemovePermissionsFromRole remove permissions from role according to the permission names or ids.
 // First parameter can be role name or id, second parameter can be permission name(s) or id(s).
 // If the first parameter is an array, the first element of the first parameter is used.
 // @param interface{}
@@ -280,8 +271,7 @@ func (s *Permify) RemovePermissionsFromRole(r interface{}, p interface{}) (err e
 
 // PERMISSION
 
-// GetPermission
-// Fetch permission according to the permission name or id.
+// GetPermission fetch permission according to the permission name or id.
 // First parameter can be permission name or id.
 // If the first parameter is an array, the first element of the given array is returned.
 // @param interface{}
@@ -311,8 +301,7 @@ func (s *Permify) GetPermission(p interface{}) (permission models.Permission, er
 	return models.Permission{}, errUnsupportedValueType
 }
 
-// GetPermissions
-// Fetch permissions according to the permission names or ids.
+// GetPermissions fetch permissions according to the permission names or ids.
 // First parameter is can be permission name(s) or id(s).
 // @param interface{}
 // @return collections.Permission, error
@@ -339,8 +328,7 @@ func (s *Permify) GetPermissions(p interface{}) (permissions collections.Permiss
 	return collections.Permission{}, errUnsupportedValueType
 }
 
-// GetAllPermissions
-// Fetch all the permissions. (with pagination option).
+// GetAllPermissions fetch all the permissions. (with pagination option).
 // First parameter is permission option.
 // @param options.PermissionOption
 // @return collections.Permission, int64, error
@@ -349,14 +337,13 @@ func (s *Permify) GetAllPermissions(option options.PermissionOption) (permission
 	if option.Pagination == nil {
 		permissionIDs, totalCount, err = s.PermissionRepository.GetPermissionIDs(nil)
 	} else {
-		permissionIDs, totalCount, err = s.PermissionRepository.GetPermissionIDs(&repositories_scopes.GormPagination{Pagination: option.Pagination.Get()})
+		permissionIDs, totalCount, err = s.PermissionRepository.GetPermissionIDs(&scopes.GormPagination{Pagination: option.Pagination.Get()})
 	}
 	permissions, err = s.GetPermissions(permissionIDs)
 	return
 }
 
-// GetDirectPermissionsOfUser
-// Fetch all direct permissions of the user. (with pagination option)
+// GetDirectPermissionsOfUser fetch all direct permissions of the user. (with pagination option)
 // First parameter is user id, second parameter is permission option.
 // @param uint
 // @param options.PermissionOption
@@ -366,14 +353,13 @@ func (s *Permify) GetDirectPermissionsOfUser(userID uint, option options.Permiss
 	if option.Pagination == nil {
 		permissionIDs, totalCount, err = s.PermissionRepository.GetDirectPermissionIDsOfUserByID(userID, nil)
 	} else {
-		permissionIDs, totalCount, err = s.PermissionRepository.GetDirectPermissionIDsOfUserByID(userID, &repositories_scopes.GormPagination{Pagination: option.Pagination.Get()})
+		permissionIDs, totalCount, err = s.PermissionRepository.GetDirectPermissionIDsOfUserByID(userID, &scopes.GormPagination{Pagination: option.Pagination.Get()})
 	}
 	permissions, err = s.GetPermissions(permissionIDs)
 	return
 }
 
-// GetPermissionsOfRoles
-// Fetch all permissions of the roles. (with pagination option)
+// GetPermissionsOfRoles fetch all permissions of the roles. (with pagination option)
 // First parameter can be role name(s) or id(s), second parameter is permission option.
 // @param interface{}
 // @param options.PermissionOption
@@ -390,15 +376,14 @@ func (s *Permify) GetPermissionsOfRoles(r interface{}, option options.Permission
 	if option.Pagination == nil {
 		permissionIDs, totalCount, err = s.PermissionRepository.GetPermissionIDsOfRolesByIDs(roles.IDs(), nil)
 	} else {
-		permissionIDs, totalCount, err = s.PermissionRepository.GetPermissionIDsOfRolesByIDs(roles.IDs(), &repositories_scopes.GormPagination{Pagination: option.Pagination.Get()})
+		permissionIDs, totalCount, err = s.PermissionRepository.GetPermissionIDsOfRolesByIDs(roles.IDs(), &scopes.GormPagination{Pagination: option.Pagination.Get()})
 	}
 
 	permissions, err = s.GetPermissions(permissionIDs)
 	return
 }
 
-// GetAllPermissionsOfUser
-// Fetch all permissions of the user that come with direct and roles.
+// GetAllPermissionsOfUser fetch all permissions of the user that come with direct and roles.
 // First parameter is user id.
 // @param uint
 // @return collections.Permission, error
@@ -425,8 +410,7 @@ func (s *Permify) GetAllPermissionsOfUser(userID uint) (permissions collections.
 	return s.GetPermissions(helpers.RemoveDuplicateValues(helpers.JoinUintArrays(rpIDs, udpIDs)))
 }
 
-// CreatePermission
-// Create new permission.
+// CreatePermission create new permission.
 // Name parameter is converted to guard name. example: create $#% contact -> create-contact.
 // If a permission with the same name has been created before, it will not create it again. (FirstOrCreate)
 // @param string
@@ -440,8 +424,7 @@ func (s *Permify) CreatePermission(name string, description string) (err error) 
 	})
 }
 
-// DeletePermission
-// Delete permission.
+// DeletePermission delete permission.
 // If the permission is in use, its relations from the pivot tables are deleted.
 // First parameter can be permission name or id.
 // If the first parameter is an array, the first element of the given array is used.
@@ -458,8 +441,7 @@ func (s *Permify) DeletePermission(p interface{}) (err error) {
 
 // USER
 
-// AddPermissionsToUser
-// Add direct permission or permissions to user according to the permission names or ids.
+// AddPermissionsToUser add direct permission or permissions to user according to the permission names or ids.
 // First parameter is the user id, second parameter is can be permission name(s) or id(s).
 // @param uint
 // @param interface{}
@@ -479,8 +461,7 @@ func (s *Permify) AddPermissionsToUser(userID uint, p interface{}) (err error) {
 	return
 }
 
-// ReplacePermissionsToUser
-// Overwrites the direct permissions of the user according to the permission names or ids.
+// ReplacePermissionsToUser overwrites the direct permissions of the user according to the permission names or ids.
 // First parameter is the user id, second parameter is can be permission name(s) or id(s).
 // @param uint
 // @param interface{}
@@ -500,8 +481,7 @@ func (s *Permify) ReplacePermissionsToUser(userID uint, p interface{}) (err erro
 	return s.UserRepository.ClearPermissions(userID)
 }
 
-// RemovePermissionsFromUser
-// remove direct permissions from user according to the permission names or ids.
+// RemovePermissionsFromUser remove direct permissions from user according to the permission names or ids.
 // First parameter is the user id, second parameter is can be permission name(s) or id(s).
 // @param uint
 // @param interface{}
@@ -521,8 +501,7 @@ func (s *Permify) RemovePermissionsFromUser(userID uint, p interface{}) (err err
 	return
 }
 
-// AddRolesToUser
-// Add role or roles to user according to the role names or ids.
+// AddRolesToUser add role or roles to user according to the role names or ids.
 // First parameter is the user id, second parameter is can be role name(s) or id(s).
 // @param uint
 // @param interface{}
@@ -542,8 +521,7 @@ func (s *Permify) AddRolesToUser(userID uint, r interface{}) (err error) {
 	return
 }
 
-// ReplaceRolesToUser
-// Overwrites the roles of the user according to the role names or ids.
+// ReplaceRolesToUser overwrites the roles of the user according to the role names or ids.
 // First parameter is the user id, second parameter is can be role name(s) or id(s).
 // @param uint
 // @param interface{}
@@ -563,8 +541,7 @@ func (s *Permify) ReplaceRolesToUser(userID uint, r interface{}) (err error) {
 	return s.UserRepository.ClearRoles(userID)
 }
 
-// RemoveRolesFromUser
-// remove direct permissions from user according to the role names or ids.
+// RemoveRolesFromUser remove direct permissions from user according to the role names or ids.
 // First parameter is the user id, second parameter is can be role name(s) or id(s).
 // @param uint
 // @param interface{}
@@ -588,8 +565,7 @@ func (s *Permify) RemoveRolesFromUser(userID uint, r interface{}) (err error) {
 
 // ROLE
 
-// RoleHasPermission
-// Does the role or any of the roles have given permission?
+// RoleHasPermission does the role or any of the roles have given permission?
 // First parameter is can be role name(s) or id(s), second parameter is can be permission name or id.
 // If the second parameter is an array, the first element of the given array is used.
 // @param interface{}
@@ -612,8 +588,7 @@ func (s *Permify) RoleHasPermission(r interface{}, p interface{}) (b bool, err e
 	return s.RoleRepository.HasPermission(roles, permission)
 }
 
-// RoleHasAllPermissions
-// Does the role or roles have all the given permissions?
+// RoleHasAllPermissions does the role or roles have all the given permissions?
 // First parameter is can be role name(s) or id(s), second parameter is can be permission name(s) or id(s).
 // @param interface{}
 // @param interface{}
@@ -635,8 +610,7 @@ func (s *Permify) RoleHasAllPermissions(r interface{}, p interface{}) (b bool, e
 	return s.RoleRepository.HasAllPermissions(roles, permissions)
 }
 
-// RoleHasAnyPermissions
-// Does the role or roles have any of the given permissions?
+// RoleHasAnyPermissions does the role or roles have any of the given permissions?
 // First parameter is can be role name(s) or id(s), second parameter is can be permission name(s) or id(s).
 // @param interface{}
 // @param interface{}
@@ -660,8 +634,7 @@ func (s *Permify) RoleHasAnyPermissions(r interface{}, p interface{}) (b bool, e
 
 // USER
 
-// UserHasRole
-// Does the user have the given role?
+// UserHasRole does the user have the given role?
 // First parameter is the user id, second parameter is can be role name or id.
 // If the second parameter is an array, the first element of the given array is used.
 // @param uint
@@ -676,8 +649,7 @@ func (s *Permify) UserHasRole(userID uint, r interface{}) (b bool, err error) {
 	return s.UserRepository.HasRole(userID, role)
 }
 
-// UserHasAllRoles
-// Does the user have all the given roles?
+// UserHasAllRoles does the user have all the given roles?
 // First parameter is the user id, second parameter is can be role name(s) or id(s).
 // @param uint
 // @param interface{}
@@ -691,8 +663,7 @@ func (s *Permify) UserHasAllRoles(userID uint, r interface{}) (b bool, err error
 	return s.UserRepository.HasAllRoles(userID, roles)
 }
 
-// UserHasAnyRoles
-// Does the user have any of the given roles?
+// UserHasAnyRoles does the user have any of the given roles?
 // First parameter is the user id, second parameter is can be role name(s) or id(s).
 // @param uint
 // @param interface{}
@@ -706,8 +677,7 @@ func (s *Permify) UserHasAnyRoles(userID uint, r interface{}) (b bool, err error
 	return s.UserRepository.HasAnyRoles(userID, roles)
 }
 
-// UserHasDirectPermission
-// Does the user have the given permission? (not including the permissions of the roles)
+// UserHasDirectPermission does the user have the given permission? (not including the permissions of the roles)
 // First parameter is the user id, second parameter is can be permission name or id.
 // If the second parameter is an array, the first element of the given array is used.
 // @param uint
@@ -722,8 +692,7 @@ func (s *Permify) UserHasDirectPermission(userID uint, p interface{}) (b bool, e
 	return s.UserRepository.HasDirectPermission(userID, permission)
 }
 
-// UserHasAllDirectPermissions
-// Does the user have all the given permissions? (not including the permissions of the roles)
+// UserHasAllDirectPermissions does the user have all the given permissions? (not including the permissions of the roles)
 // First parameter is the user id, second parameter is can be permission name(s) or id(s).
 // @param uint
 // @param interface{}
@@ -737,8 +706,7 @@ func (s *Permify) UserHasAllDirectPermissions(userID uint, p interface{}) (b boo
 	return s.UserRepository.HasAllDirectPermissions(userID, permissions)
 }
 
-// UserHasAnyDirectPermissions
-// Does the user have any of the given permissions? (not including the permissions of the roles)
+// UserHasAnyDirectPermissions does the user have any of the given permissions? (not including the permissions of the roles)
 // First parameter is the user id, second parameter is can be permission name(s) or id(s).
 // @param uint
 // @param interface{}
@@ -753,8 +721,7 @@ func (s *Permify) UserHasAnyDirectPermissions(userID uint, p interface{}) (b boo
 }
 
 
-// UserHasPermission
-// Does the user have the given permission? (including the permissions of the roles)
+// UserHasPermission does the user have the given permission? (including the permissions of the roles)
 // First parameter is the user id, second parameter is can be permission name or id.
 // If the second parameter is an array, the first element of the given array is used.
 // @param uint
@@ -796,8 +763,7 @@ func (s *Permify) UserHasPermission(userID uint, p interface{}) (b bool, err err
 	return false, err
 }
 
-// UserHasAllPermissions
-// Does the user have all the given permissions? (including the permissions of the roles).
+// UserHasAllPermissions does the user have all the given permissions? (including the permissions of the roles).
 // First parameter is the user id, second parameter is can be permission name(s) or id(s).
 // @param uint
 // @param interface{}
@@ -839,8 +805,7 @@ func (s *Permify) UserHasAllPermissions(userID uint, p interface{}) (b bool, err
 	return true, err
 }
 
-// UserHasAnyPermissions
-// Does the user have any of the given permissions? (including the permissions of the roles).
+// UserHasAnyPermissions does the user have any of the given permissions? (including the permissions of the roles).
 // First parameter is the user id, second parameter is can be permission name(s) or id(s).
 // @param uint
 // @param interface{}

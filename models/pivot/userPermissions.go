@@ -1,4 +1,4 @@
-package models_pivot
+package pivot
 
 // UserPermissions represents the database model of user permissions relationships
 type UserPermissions struct {
