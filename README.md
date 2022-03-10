@@ -18,6 +18,28 @@ Install
 go get github.com/Permify/permify-gorm
 ```
 
+Run Tests
+
+Full package test
+```shell
+go test ./...
+```
+
+Get the database driver for gorm that you will be using
+
+```shell
+# mysql 
+go get gorm.io/driver/mysql 
+# or postgres
+go get gorm.io/driver/postgres
+# or sqlite
+go get gorm.io/driver/sqlite
+# or sqlserver
+go get gorm.io/driver/sqlserver
+# or clickhouse
+go get gorm.io/driver/clickhouse
+```
+
 Import permify.
 
 ```go
@@ -32,12 +54,11 @@ db, _ := gorm.Open(mysql.Open("user:password@tcp(host:3306)/db?charset=utf8&pars
 
 // New initializer for Permify
 // If migration is true, it generate all tables in the database if they don't exist.
-p, _ := permify.New(permify.Options{
+permify, _ := permify.New(permify.Options{
 	Migrate: true,
 	DB: db,
 })
 ```
-
 
 ## 🚲 Basic Usage
 
@@ -155,13 +176,41 @@ can, err := permify.UserHasAnyRoles(1, []string{"admin", "manager"})
 
 ## 🚀 Using your user model
 
+You can create the relationships between the user and the role and permissions in this manner. In this way:
 
+- You can manage user preloads
+- You can create foreign key between users and pivot tables (user_roles, user permissions).
 
+```go
+import models `github.com/Permify/permify-gorm/models`
 
+type User struct {
+    gorm.Model
+	Name string
+
+    // permify
+	Roles []models.Role `gorm:"many2many:user_roles;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+    Permissions []models.Permission `gorm:"many2many:user_permissions;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+}
+```
 
 ## ⁉️ Error Handling
 
+### ErrRecordNotFound
 
+You can use error handling in the same way as gorm. for example:
+
+```go
+// Check if returns RecordNotFound error
+permission, err := permify.GetPermission(1)
+if errors.Is(err, gorm.ErrRecordNotFound) {
+	// record not found
+}
+```
+
+### Errors
+
+[Errors List](https://github.com/go-gorm/gorm/blob/master/errors.go)
 
 <h2 align="left">:heart: Let's get connected:</h2>
 
