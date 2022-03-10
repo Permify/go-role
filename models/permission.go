@@ -4,6 +4,7 @@ import (
 	`time`
 )
 
+// Permission represents the database model of permissions
 type Permission struct {
 	ID          uint   `gorm:"primary_key" json:"id"`
 	Name        string `gorm:"size:255;not null" json:"name"`
@@ -15,7 +16,7 @@ type Permission struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// TableName /**
+// TableName sets the table name
 func (Permission) TableName() string {
 	return "permissions"
 }

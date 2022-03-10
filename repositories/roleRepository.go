@@ -9,6 +9,8 @@ import (
 	repositories_scopes `github.com/Permify/permify-gorm/repositories/repositories.scopes`
 )
 
+// IRoleRepository
+// Its data access layer abstraction of role
 type IRoleRepository interface {
 	Migratable
 
@@ -54,6 +56,8 @@ type IRoleRepository interface {
 	HasAnyPermissions(roles collections.Role, permissions collections.Permission) (b bool, err error)
 }
 
+// RoleRepository
+// Its data access layer of role
 type RoleRepository struct {
 	Database *gorm.DB
 }

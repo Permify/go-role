@@ -4,6 +4,11 @@ import (
 	`reflect`
 )
 
+// InArray
+// Is the value in the first parameter an element of the array in the second parameter?
+// @param interface{}
+// @param interface{}
+// return bool
 func InArray(val interface{}, array interface{}) (exists bool) {
 	exists = false
 	switch reflect.TypeOf(array).Kind() {
@@ -19,6 +24,10 @@ func InArray(val interface{}, array interface{}) (exists bool) {
 	return
 }
 
+// JoinUintArrays
+// Concatenates the given uint arrays and makes them a single array.
+// @param ...[]uint
+// return []uint
 func JoinUintArrays(array ...[]uint) (j []uint) {
 	for _, a := range array {
 		for _, b := range a {
@@ -28,6 +37,10 @@ func JoinUintArrays(array ...[]uint) (j []uint) {
 	return
 }
 
+// RemoveDuplicateValues
+// Make singular of repeating values in an array
+// @param []uint
+// return []uint
 func RemoveDuplicateValues(intSlice []uint) []uint {
 	keys := make(map[uint]bool)
 	list := []uint{}

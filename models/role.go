@@ -4,6 +4,7 @@ import (
 	`time`
 )
 
+// Role represents the database model of roles
 type Role struct {
 	ID          uint   `gorm:"primary_key" json:"id"`
 	Name        string `gorm:"size:255;not null" json:"name"`
@@ -18,7 +19,7 @@ type Role struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// TableName /**
+// TableName sets the table name
 func (Role) TableName() string {
 	return "roles"
 }

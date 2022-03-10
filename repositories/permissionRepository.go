@@ -9,6 +9,8 @@ import (
 	repositories_scopes `github.com/Permify/permify-gorm/repositories/repositories.scopes`
 )
 
+// IPermissionRepository
+// Its data access layer abstraction of permission
 type IPermissionRepository interface {
 	Migratable
 
@@ -35,6 +37,8 @@ type IPermissionRepository interface {
 	Delete(permission *models.Permission) (err error)
 }
 
+// PermissionRepository
+// Its data access layer of permission
 type PermissionRepository struct {
 	Database *gorm.DB
 }

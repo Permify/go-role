@@ -9,6 +9,8 @@ import (
 	models_pivot `github.com/Permify/permify-gorm/models/models.pivot`
 )
 
+// IUserRepository
+// Its data access layer abstraction of user
 type IUserRepository interface {
 
 	// actions
@@ -34,6 +36,8 @@ type IUserRepository interface {
 	HasAnyDirectPermissions(userID uint, permissions collections.Permission) (b bool, err error)
 }
 
+// UserRepository
+// Its data access layer of user
 type UserRepository struct {
 	Database *gorm.DB
 }
