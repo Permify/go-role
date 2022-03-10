@@ -521,7 +521,6 @@ func (s *Permify) RemovePermissionsFromUser(userID uint, p interface{}) (err err
 	return
 }
 
-
 // AddRolesToUser
 // Add role or roles to user according to the role names or ids.
 // First parameter is the user id, second parameter is can be role name(s) or id(s).
@@ -773,6 +772,7 @@ func (s *Permify) UserHasPermission(userID uint, p interface{}) (b bool, err err
 	if err != nil {
 		return false, err
 	}
+
 	if hasDirect {
 		return true, err
 	}
@@ -788,6 +788,7 @@ func (s *Permify) UserHasPermission(userID uint, p interface{}) (b bool, err err
 	if err != nil {
 		return false, err
 	}
+
 	if hasAny {
 		return true, err
 	}
@@ -854,15 +855,26 @@ func (s *Permify) UserHasAnyPermissions(userID uint, p interface{}) (b bool, err
 
 	var hasDirect bool
 	hasDirect, err = s.UserRepository.HasAnyDirectPermissions(userID, permissions)
+	if err != nil {
+		return false, err
+	}
+
 	if hasDirect {
 		return true, nil
 	}
 
 	var roleIDs []uint
 	roleIDs, _, err = s.RoleRepository.GetRoleIDsOfUser(userID, nil)
+	if err != nil {
+		return false, err
+	}
 
 	var hasAny bool
 	hasAny, err = s.RoleHasAnyPermissions(roleIDs, p)
+	if err != nil {
+		return false, err
+	}
+
 	if hasAny {
 		return true, nil
 	}
