@@ -46,23 +46,14 @@ type UserRepository struct {
 // @param collections.Permission
 // @return error
 func (repository *UserRepository) AddPermissions(userID uint, permissions collections.Permission) error {
-	return repository.Database.Transaction(func(tx *gorm.DB) error {
-		var ups []pivot.UserPermissions
-
-		for _, p := range permissions.Origin() {
-			ups = append(ups, pivot.UserPermissions{
-				UserID:       userID,
-				PermissionID: p.ID,
-			})
-		}
-
-		if err := tx.Clauses(clause.OnConflict{DoNothing: true}).Create(&ups).Error; err != nil {
-			tx.Rollback()
-			return err
-		}
-
-		return nil
-	})
+	var userPermissions []pivot.UserPermissions
+	for _, permission := range permissions.Origin() {
+		userPermissions = append(userPermissions, pivot.UserPermissions{
+			UserID:       userID,
+			PermissionID: permission.ID,
+		})
+	}
+	return repository.Database.Clauses(clause.OnConflict{DoNothing: true}).Create(&userPermissions).Error
 }
 
 // ReplacePermissions replace direct permissions of user.
@@ -76,16 +67,15 @@ func (repository *UserRepository) ReplacePermissions(userID uint, permissions co
 			return err
 		}
 
-		var ups []pivot.UserPermissions
-
-		for _, p := range permissions.Origin() {
-			ups = append(ups, pivot.UserPermissions{
+		var userPermissions []pivot.UserPermissions
+		for _, permission := range permissions.Origin() {
+			userPermissions = append(userPermissions, pivot.UserPermissions{
 				UserID:       userID,
-				PermissionID: p.ID,
+				PermissionID: permission.ID,
 			})
 		}
 
-		if err := tx.Clauses(clause.OnConflict{DoNothing: true}).Create(&ups).Error; err != nil {
+		if err := tx.Clauses(clause.OnConflict{DoNothing: true}).Create(&userPermissions).Error; err != nil {
 			tx.Rollback()
 			return err
 		}
@@ -99,23 +89,14 @@ func (repository *UserRepository) ReplacePermissions(userID uint, permissions co
 // @param collections.Permission
 // @return error
 func (repository *UserRepository) RemovePermissions(userID uint, permissions collections.Permission) error {
-	return repository.Database.Transaction(func(tx *gorm.DB) error {
-		var ups []pivot.UserPermissions
-
-		for _, p := range permissions.Origin() {
-			ups = append(ups, pivot.UserPermissions{
-				UserID:       userID,
-				PermissionID: p.ID,
-			})
-		}
-
-		if err := tx.Delete(&ups).Error; err != nil {
-			tx.Rollback()
-			return err
-		}
-
-		return nil
-	})
+	var userPermissions []pivot.UserPermissions
+	for _, permission := range permissions.Origin() {
+		userPermissions = append(userPermissions, pivot.UserPermissions{
+			UserID:       userID,
+			PermissionID: permission.ID,
+		})
+	}
+	return repository.Database.Delete(&userPermissions).Error
 }
 
 // ClearPermissions remove all direct permissions of user.
@@ -130,20 +111,14 @@ func (repository *UserRepository) ClearPermissions(userID uint) (err error) {
 // @param collections.Role
 // @return error
 func (repository *UserRepository) AddRoles(userID uint, roles collections.Role) error {
-	return repository.Database.Transaction(func(tx *gorm.DB) error {
-		var ur []pivot.UserRoles
-		for _, r := range roles.Origin() {
-			ur = append(ur, pivot.UserRoles{
-				UserID: userID,
-				RoleID: r.ID,
-			})
-		}
-		if err := tx.Clauses(clause.OnConflict{DoNothing: true}).Create(&ur).Error; err != nil {
-			tx.Rollback()
-			return err
-		}
-		return nil
-	})
+	var userRoles []pivot.UserRoles
+	for _, role := range roles.Origin() {
+		userRoles = append(userRoles, pivot.UserRoles{
+			UserID: userID,
+			RoleID: role.ID,
+		})
+	}
+	return repository.Database.Clauses(clause.OnConflict{DoNothing: true}).Create(&userRoles).Error
 }
 
 // ReplaceRoles replace roles of user.
@@ -156,14 +131,14 @@ func (repository *UserRepository) ReplaceRoles(userID uint, roles collections.Ro
 			tx.Rollback()
 			return err
 		}
-		var ur []pivot.UserRoles
-		for _, r := range roles.Origin() {
-			ur = append(ur, pivot.UserRoles{
+		var userRoles []pivot.UserRoles
+		for _, role := range roles.Origin() {
+			userRoles = append(userRoles, pivot.UserRoles{
 				UserID: userID,
-				RoleID: r.ID,
+				RoleID: role.ID,
 			})
 		}
-		if err := tx.Clauses(clause.OnConflict{DoNothing: true}).Create(&ur).Error; err != nil {
+		if err := tx.Clauses(clause.OnConflict{DoNothing: true}).Create(&userRoles).Error; err != nil {
 			tx.Rollback()
 			return err
 		}
@@ -176,20 +151,14 @@ func (repository *UserRepository) ReplaceRoles(userID uint, roles collections.Ro
 // @param collections.Role
 // @return error
 func (repository *UserRepository) RemoveRoles(userID uint, roles collections.Role) error {
-	return repository.Database.Transaction(func(tx *gorm.DB) error {
-		var ur []pivot.UserRoles
-		for _, r := range roles.Origin() {
-			ur = append(ur, pivot.UserRoles{
-				UserID: userID,
-				RoleID: r.ID,
-			})
-		}
-		if err := tx.Delete(&ur).Error; err != nil {
-			tx.Rollback()
-			return err
-		}
-		return nil
-	})
+	var userRoles []pivot.UserRoles
+	for _, role := range roles.Origin() {
+		userRoles = append(userRoles, pivot.UserRoles{
+			UserID: userID,
+			RoleID: role.ID,
+		})
+	}
+	return repository.Database.Delete(&userRoles).Error
 }
 
 // ClearRoles remove all roles of user.
