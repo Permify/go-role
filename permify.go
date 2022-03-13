@@ -143,6 +143,7 @@ func (s *Permify) GetAllRoles(option options.RoleOption) (roles collections.Role
 	} else {
 		roleIDs, totalCount, err = s.RoleRepository.GetRoleIDs(&scopes.GormPagination{Pagination: option.Pagination.Get()})
 	}
+
 	roles, err = s.GetRoles(roleIDs, option.WithPermissions)
 	return
 }
@@ -160,6 +161,7 @@ func (s *Permify) GetRolesOfUser(userID uint, option options.RoleOption) (roles 
 	} else {
 		roleIDs, totalCount, err = s.RoleRepository.GetRoleIDsOfUser(userID, &scopes.GormPagination{Pagination: option.Pagination.Get()})
 	}
+
 	roles, err = s.GetRoles(roleIDs, option.WithPermissions)
 	return
 }
@@ -239,10 +241,10 @@ func (s *Permify) ReplacePermissionsToRole(r interface{}, p interface{}) (err er
 	}
 
 	if permissions.Len() > 0 {
-		err = s.RoleRepository.ReplacePermissions(&role, permissions)
+		return s.RoleRepository.ReplacePermissions(&role, permissions)
 	}
 
-	return
+	return s.RoleRepository.ClearPermissions(&role)
 }
 
 // RemovePermissionsFromRole remove permissions from role according to the permission names or ids.
@@ -391,25 +393,25 @@ func (s *Permify) GetPermissionsOfRoles(r interface{}, option options.Permission
 // @param uint
 // @return collections.Permission, error
 func (s *Permify) GetAllPermissionsOfUser(userID uint) (permissions collections.Permission, err error) {
-	var urIDs []uint
-	urIDs, _, err = s.RoleRepository.GetRoleIDsOfUser(userID, nil)
+	var userRoleIDs []uint
+	userRoleIDs, _, err = s.RoleRepository.GetRoleIDsOfUser(userID, nil)
 	if err != nil {
 		return collections.Permission{}, err
 	}
 
-	var rpIDs []uint
-	rpIDs, _, err = s.PermissionRepository.GetPermissionIDsOfRolesByIDs(urIDs, nil)
+	var rolePermissionIDs []uint
+	rolePermissionIDs, _, err = s.PermissionRepository.GetPermissionIDsOfRolesByIDs(userRoleIDs, nil)
 	if err != nil {
 		return collections.Permission{}, err
 	}
 
-	var udpIDs []uint
-	udpIDs, _, err = s.PermissionRepository.GetDirectPermissionIDsOfUserByID(userID, nil)
+	var userDirectPermissionIDs []uint
+	userDirectPermissionIDs, _, err = s.PermissionRepository.GetDirectPermissionIDsOfUserByID(userID, nil)
 	if err != nil {
 		return collections.Permission{}, err
 	}
 
-	return s.GetPermissions(helpers.RemoveDuplicateValues(helpers.JoinUintArrays(rpIDs, udpIDs)))
+	return s.GetPermissions(helpers.RemoveDuplicateValues(helpers.JoinUintArrays(rolePermissionIDs, userDirectPermissionIDs)))
 }
 
 // CreatePermission create new permission.
@@ -726,13 +728,13 @@ func (s *Permify) UserHasPermission(userID uint, p interface{}) (b bool, err err
 		return false, err
 	}
 
-	var hasDirect bool
-	hasDirect, err = s.UserRepository.HasDirectPermission(userID, permission)
+	var directPermissionIDs []uint
+	directPermissionIDs, _, err = s.PermissionRepository.GetDirectPermissionIDsOfUserByID(userID, nil)
 	if err != nil {
 		return false, err
 	}
 
-	if hasDirect {
+	if helpers.InArray(permission.ID, directPermissionIDs) {
 		return true, err
 	}
 
@@ -742,13 +744,13 @@ func (s *Permify) UserHasPermission(userID uint, p interface{}) (b bool, err err
 		return false, err
 	}
 
-	var hasAny bool
-	hasAny, err = s.RoleHasAnyPermissions(roleIDs, p)
+	var permissionIDs []uint
+	permissionIDs, _, err = s.PermissionRepository.GetPermissionIDsOfRolesByIDs(roleIDs, nil)
 	if err != nil {
 		return false, err
 	}
 
-	if hasAny {
+	if helpers.InArray(permission.ID, permissionIDs) {
 		return true, err
 	}
 
@@ -767,28 +769,28 @@ func (s *Permify) UserHasAllPermissions(userID uint, p interface{}) (b bool, err
 		return false, err
 	}
 
-	var upIDs []uint
-	upIDs, _, err = s.PermissionRepository.GetDirectPermissionIDsOfUserByID(userID, nil)
+	var userPermissionIDs []uint
+	userPermissionIDs, _, err = s.PermissionRepository.GetDirectPermissionIDsOfUserByID(userID, nil)
 	if err != nil {
 		return false, err
 	}
 
-	var rIDs []uint
-	rIDs, _, err = s.RoleRepository.GetRoleIDsOfUser(userID, nil)
+	var roleIDs []uint
+	roleIDs, _, err = s.RoleRepository.GetRoleIDsOfUser(userID, nil)
 	if err != nil {
 		return false, err
 	}
 
-	var pIDs []uint
-	pIDs, _, err = s.PermissionRepository.GetPermissionIDsOfRolesByIDs(rIDs, nil)
+	var rolePermissionIDs []uint
+	rolePermissionIDs, _, err = s.PermissionRepository.GetPermissionIDsOfRolesByIDs(roleIDs, nil)
 	if err != nil {
 		return false, err
 	}
 
-	j := helpers.RemoveDuplicateValues(helpers.JoinUintArrays(upIDs, pIDs))
+	allPermissionIDsOfUser := helpers.RemoveDuplicateValues(helpers.JoinUintArrays(userPermissionIDs, rolePermissionIDs))
 
-	for _, p := range permissions.IDs() {
-		if !helpers.InArray(p, j) {
+	for _, permissionID := range permissions.IDs() {
+		if !helpers.InArray(permissionID, allPermissionIDsOfUser) {
 			return false, err
 		}
 	}
@@ -808,14 +810,16 @@ func (s *Permify) UserHasAnyPermissions(userID uint, p interface{}) (b bool, err
 		return false, err
 	}
 
-	var hasDirect bool
-	hasDirect, err = s.UserRepository.HasAnyDirectPermissions(userID, permissions)
+	var directPermissionIDs []uint
+	directPermissionIDs, _, err = s.PermissionRepository.GetDirectPermissionIDsOfUserByID(userID, nil)
 	if err != nil {
 		return false, err
 	}
 
-	if hasDirect {
-		return true, nil
+	for _, permissionID := range permissions.IDs() {
+		if helpers.InArray(permissionID, directPermissionIDs) {
+			return true, err
+		}
 	}
 
 	var roleIDs []uint
@@ -824,14 +828,16 @@ func (s *Permify) UserHasAnyPermissions(userID uint, p interface{}) (b bool, err
 		return false, err
 	}
 
-	var hasAny bool
-	hasAny, err = s.RoleHasAnyPermissions(roleIDs, p)
+	var permissionIDs []uint
+	permissionIDs, _, err = s.PermissionRepository.GetPermissionIDsOfRolesByIDs(roleIDs, nil)
 	if err != nil {
 		return false, err
 	}
 
-	if hasAny {
-		return true, nil
+	for _, permissionID := range permissions.IDs() {
+		if helpers.InArray(permissionID, permissionIDs) {
+			return true, err
+		}
 	}
 
 	return false, err
