@@ -185,7 +185,17 @@ func (repository *RoleRepository) Updates(role *models.Role, updates map[string]
 // @param *models.Role
 // @return error
 func (repository *RoleRepository) Delete(role *models.Role) (err error) {
-	return repository.Database.Delete(role).Error
+	return repository.Database.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Where("user_roles.role_id = ?", role.ID).Delete(&pivot.UserRoles{}).Error; err != nil {
+			tx.Rollback()
+			return err
+		}
+		if err := tx.Delete(role).Error; err != nil {
+			tx.Rollback()
+			return err
+		}
+		return nil
+	})
 }
 
 // ACTIONS
@@ -229,7 +239,7 @@ func (repository *RoleRepository) ClearPermissions(role *models.Role) (err error
 // @return bool, error
 func (repository *RoleRepository) HasPermission(roles collections.Role, permission models.Permission) (b bool, err error) {
 	var count int64
-	err = repository.Database.Table("role_permissions").Where("role_permissions.role_id IN (?)", roles.IDs()).Where("role_permissions.permission_id = ?", permission).Count(&count).Error
+	err = repository.Database.Table("role_permissions").Where("role_permissions.role_id IN (?)", roles.IDs()).Where("role_permissions.permission_id = ?", permission.ID).Count(&count).Error
 	return count > 0, err
 }
 

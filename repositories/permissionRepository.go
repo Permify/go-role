@@ -132,7 +132,17 @@ func (repository *PermissionRepository) Updates(permission *models.Permission, u
 // @param *models.Permission
 // @return error
 func (repository *PermissionRepository) Delete(permission *models.Permission) (err error) {
-	return repository.Database.Delete(permission).Error
+	return repository.Database.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Where("user_permissions.permission_id = ?", permission.ID).Delete(&pivot.UserPermissions{}).Error; err != nil {
+			tx.Rollback()
+			return err
+		}
+		if err := tx.Delete(permission).Error; err != nil {
+			tx.Rollback()
+			return err
+		}
+		return nil
+	})
 }
 
 // paginate pagging if pagination option is true.
