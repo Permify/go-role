@@ -59,9 +59,9 @@ var _ = Describe("Permission Repository", func() {
 				WithArgs(permission.ID).
 				WillReturnRows(rows)
 
-			db, err := repository.GetPermissionByID(permission.ID)
+			value, err := repository.GetPermissionByID(permission.ID)
 			Expect(err).ShouldNot(HaveOccurred())
-			Expect(db).Should(Equal(permission))
+			Expect(value).Should(Equal(permission))
 		})
 
 		It("not found", func() {
@@ -89,15 +89,65 @@ var _ = Describe("Permission Repository", func() {
 				WithArgs(permission.GuardName).
 				WillReturnRows(rows)
 
-			db, err := repository.GetPermissionByGuardName(permission.GuardName)
+			value, err := repository.GetPermissionByGuardName(permission.GuardName)
 			Expect(err).ShouldNot(HaveOccurred())
-			Expect(db).Should(Equal(permission))
+			Expect(value).Should(Equal(permission))
 		})
 
 		It("not found", func() {
 			mock.ExpectQuery(`.+`).WillReturnRows(sqlmock.NewRows(nil))
 			_, err := repository.GetPermissionByGuardName("create-contact-permission")
 			Expect(err).Should(Equal(gorm.ErrRecordNotFound))
+		})
+	})
+
+	Context("Get Permissions", func() {
+		It("found", func() {
+			permissions := []models.Permission{
+				{
+					ID:        1,
+					Name:      "create contact permission",
+					GuardName: "create-contact-permission",
+				},
+			}
+
+			rows := sqlmock.NewRows([]string{"id", "name", "guard_name"}).
+				AddRow(permissions[0].ID, permissions[0].Name, permissions[0].GuardName)
+
+			const sqlSelectOne = `SELECT * FROM "permissions" WHERE permissions.id IN ($1)`
+
+			mock.ExpectQuery(regexp.QuoteMeta(sqlSelectOne)).
+				WithArgs(permissions[0].ID).
+				WillReturnRows(rows)
+
+			value, err := repository.GetPermissions([]uint{permissions[0].ID})
+			Expect(err).ShouldNot(HaveOccurred())
+			Expect(value.Origin()).Should(Equal(permissions))
+		})
+	})
+
+	Context("Get Permissions By Guard Names", func() {
+		It("found", func() {
+			permissions := []models.Permission{
+				{
+					ID:        1,
+					Name:      "create contact permission",
+					GuardName: "create-contact-permission",
+				},
+			}
+
+			rows := sqlmock.NewRows([]string{"id", "name", "guard_name"}).
+				AddRow(permissions[0].ID, permissions[0].Name, permissions[0].GuardName)
+
+			const sqlSelectOne = `SELECT * FROM "permissions" WHERE permissions.guard_name IN ($1)`
+
+			mock.ExpectQuery(regexp.QuoteMeta(sqlSelectOne)).
+				WithArgs(permissions[0].GuardName).
+				WillReturnRows(rows)
+
+			value, err := repository.GetPermissionsByGuardNames([]string{permissions[0].GuardName})
+			Expect(err).ShouldNot(HaveOccurred())
+			Expect(value.Origin()).Should(Equal(permissions))
 		})
 	})
 })

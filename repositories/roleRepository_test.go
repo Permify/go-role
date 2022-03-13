@@ -10,6 +10,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
+	"github.com/Permify/permify-gorm/collections"
 	"github.com/Permify/permify-gorm/models"
 )
 
@@ -98,6 +99,140 @@ var _ = Describe("Role Repository", func() {
 			mock.ExpectQuery(`.+`).WillReturnRows(sqlmock.NewRows(nil))
 			_, err := repository.GetRoleByGuardName("admin")
 			Expect(err).Should(Equal(gorm.ErrRecordNotFound))
+		})
+	})
+
+	Context("Get Roles", func() {
+		It("found", func() {
+			roles := []models.Role{
+				{
+					ID:        1,
+					Name:      "admin",
+					GuardName: "admin",
+				},
+			}
+
+			rows := sqlmock.NewRows([]string{"id", "name", "guard_name"}).
+				AddRow(roles[0].ID, roles[0].Name, roles[0].GuardName)
+
+			const sqlSelectOne = `SELECT * FROM "roles" WHERE roles.id IN ($1)`
+
+			mock.ExpectQuery(regexp.QuoteMeta(sqlSelectOne)).
+				WithArgs(roles[0].ID).
+				WillReturnRows(rows)
+
+			value, err := repository.GetRoles([]uint{roles[0].ID})
+			Expect(err).ShouldNot(HaveOccurred())
+			Expect(value.Origin()).Should(Equal(roles))
+		})
+	})
+
+	Context("Get Roles By Guard Names", func() {
+		It("found", func() {
+			roles := []models.Role{
+				{
+					ID:        1,
+					Name:      "admin",
+					GuardName: "admin",
+				},
+			}
+
+			rows := sqlmock.NewRows([]string{"id", "name", "guard_name"}).
+				AddRow(roles[0].ID, roles[0].Name, roles[0].GuardName)
+
+			const sqlSelectOne = `SELECT * FROM "roles" WHERE roles.guard_name IN ($1)`
+
+			mock.ExpectQuery(regexp.QuoteMeta(sqlSelectOne)).
+				WithArgs(roles[0].GuardName).
+				WillReturnRows(rows)
+
+			value, err := repository.GetRolesByGuardNames([]string{roles[0].GuardName})
+			Expect(err).ShouldNot(HaveOccurred())
+			Expect(value.Origin()).Should(Equal(roles))
+		})
+	})
+
+	Context("Has Permission", func() {
+		It("found", func() {
+			const sqlSelectOne = `SELECT count(*) FROM "role_permissions" WHERE role_permissions.role_id IN ($1) AND role_permissions.permission_id = $2`
+
+			mock.ExpectQuery(regexp.QuoteMeta(sqlSelectOne)).
+				WithArgs(1, 1).
+				WillReturnRows(sqlmock.NewRows([]string{"count"}).
+					AddRow(1))
+
+			db, err := repository.HasPermission(collections.Role([]models.Role{{ID: 1}}), models.Permission{ID: 1})
+			Expect(err).ShouldNot(HaveOccurred())
+			Expect(db).Should(Equal(true))
+		})
+
+		It("not found", func() {
+			const sqlSelectOne = `SELECT count(*) FROM "role_permissions" WHERE role_permissions.role_id IN ($1) AND role_permissions.permission_id = $2`
+
+			mock.ExpectQuery(regexp.QuoteMeta(sqlSelectOne)).
+				WithArgs(1, 1).
+				WillReturnRows(sqlmock.NewRows([]string{"count"}).
+					AddRow(0))
+
+			db, err := repository.HasPermission(collections.Role([]models.Role{{ID: 1}}), models.Permission{ID: 1})
+			Expect(err).ShouldNot(HaveOccurred())
+			Expect(db).Should(Equal(false))
+		})
+	})
+
+	Context("Has All Permission", func() {
+		It("found", func() {
+			const sqlSelectOne = `SELECT count(*) FROM "role_permissions" WHERE role_permissions.role_id IN ($1) AND role_permissions.permission_id IN ($2)`
+
+			mock.ExpectQuery(regexp.QuoteMeta(sqlSelectOne)).
+				WithArgs(1, 1).
+				WillReturnRows(sqlmock.NewRows([]string{"count"}).
+					AddRow(1))
+
+			db, err := repository.HasAllPermissions(collections.Role([]models.Role{{ID: 1}}), collections.Permission([]models.Permission{{ID: 1}}))
+			Expect(err).ShouldNot(HaveOccurred())
+			Expect(db).Should(Equal(true))
+		})
+
+		It("not found", func() {
+			const sqlSelectOne = `SELECT count(*) FROM "role_permissions" WHERE role_permissions.role_id IN ($1,$2) AND role_permissions.permission_id IN ($3)`
+
+			mock.ExpectQuery(regexp.QuoteMeta(sqlSelectOne)).
+				WithArgs(1, 2, 1).
+				WillReturnRows(sqlmock.NewRows([]string{"count"}).
+					AddRow(1))
+
+			db, err := repository.HasAllPermissions(collections.Role([]models.Role{{ID: 1}, {ID: 2}}), collections.Permission([]models.Permission{{ID: 1}}))
+			Expect(err).ShouldNot(HaveOccurred())
+			Expect(db).Should(Equal(false))
+		})
+	})
+
+	Context("Has Any Permission", func() {
+		It("found", func() {
+			const sqlSelectOne = `SELECT count(*) FROM "role_permissions" WHERE role_permissions.role_id IN ($1) AND role_permissions.permission_id IN ($2)`
+
+			mock.ExpectQuery(regexp.QuoteMeta(sqlSelectOne)).
+				WithArgs(1, 1).
+				WillReturnRows(sqlmock.NewRows([]string{"count"}).
+					AddRow(1))
+
+			db, err := repository.HasAnyPermissions(collections.Role([]models.Role{{ID: 1}}), collections.Permission([]models.Permission{{ID: 1}}))
+			Expect(err).ShouldNot(HaveOccurred())
+			Expect(db).Should(Equal(true))
+		})
+
+		It("found", func() {
+			const sqlSelectOne = `SELECT count(*) FROM "role_permissions" WHERE role_permissions.role_id IN ($1) AND role_permissions.permission_id IN ($2)`
+
+			mock.ExpectQuery(regexp.QuoteMeta(sqlSelectOne)).
+				WithArgs(1, 1).
+				WillReturnRows(sqlmock.NewRows([]string{"count"}).
+					AddRow(0))
+
+			db, err := repository.HasAnyPermissions(collections.Role([]models.Role{{ID: 1}}), collections.Permission([]models.Permission{{ID: 1}}))
+			Expect(err).ShouldNot(HaveOccurred())
+			Expect(db).Should(Equal(false))
 		})
 	})
 })
