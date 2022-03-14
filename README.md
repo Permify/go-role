@@ -5,7 +5,7 @@
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/Permify/permify-gorm)
 ![GitHub](https://img.shields.io/github/license/Permify/permify-gorm)
 
-## Role Based Access Control (RBAC) for your go application
+## Associate users with roles and permissions
 
 This package allows you to manage user permissions and roles in your database.
 
