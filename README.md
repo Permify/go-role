@@ -431,6 +431,9 @@ Permify API is an authorization API which you can add complex rbac and abac solu
 <a href="https://www.linkedin.com/company/permifyco">
   <img alt="guilyx's LinkdeIN" width="50px" src="https://user-images.githubusercontent.com/43545812/144035037-0f415fc7-9f96-4517-a370-ccc6e78a714b.png" />
 </a>
+<a href="https://discord.gg/MJbUjwskdH">
+  <img alt="guilyx's Discord" width="50px" src="https://www.apkmirror.com/wp-content/uploads/2021/06/09/60dbb1f8b30bb.png" />
+</a>
 </p>
 
 
