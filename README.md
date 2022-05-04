@@ -5,6 +5,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/Permify/permify-gorm)](https://goreportcard.com/report/github.com/Permify/permify-gorm)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/Permify/permify-gorm)
 ![GitHub](https://img.shields.io/github/license/Permify/permify-gorm)
+[![Twitter Follow](https://img.shields.io/twitter/follow/GetPermify?style=social)](https://twitter.com/GetPermify)
 
 ## Associate users with roles and permissions
 
