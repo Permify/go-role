@@ -7,10 +7,13 @@
 ![GitHub](https://img.shields.io/github/license/Permify/permify-gorm)
 [![Twitter Follow](https://img.shields.io/twitter/follow/GetPermify?style=social)](https://twitter.com/GetPermify)
 
+
+ℹ️ | This package is completely open source and works independently from Permify.
+:---: | :---
+
 ## Associate users with roles and permissions
 
 This package allows you to manage user permissions and roles in your database.
-
 
 ## 👇 Setup
 
