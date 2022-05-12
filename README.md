@@ -420,6 +420,12 @@ if errors.Is(err, gorm.ErrRecordNotFound) {
 [Errors List](https://github.com/go-gorm/gorm/blob/master/errors.go)
 
 
+Stargazers
+-----------
+
+[![Stargazers repo roster for @Permify/permify-gorm](https://reporoster.com/stars/Permify/permify-gorm)](https://github.com/Permify/permify-gorm/stargazers)
+
+
 ## Need More, Check Out our API
 
 Permify API is an authorization API which you can add complex rbac and abac solutions.
@@ -442,4 +448,4 @@ Permify API is an authorization API which you can add complex rbac and abac solu
 </p>
 
 
-[comment]: <> (![permify-gorm-draw-sql]&#40;https://user-images.githubusercontent.com/39353278/157461050-0a146e7c-9ba7-4956-90a9-4720190a2c82.png&#41;)
+
