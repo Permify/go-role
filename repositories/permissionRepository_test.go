@@ -10,7 +10,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	"github.com/Permify/permify-gorm/models"
+	"github.com/Permify/go-role/models"
 )
 
 var _ = Describe("Permission Repository", func() {

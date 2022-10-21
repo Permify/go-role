@@ -5,12 +5,12 @@ import (
 
 	"gorm.io/gorm"
 
-	"github.com/Permify/permify-gorm/collections"
-	"github.com/Permify/permify-gorm/helpers"
-	"github.com/Permify/permify-gorm/models"
-	"github.com/Permify/permify-gorm/options"
-	"github.com/Permify/permify-gorm/repositories"
-	"github.com/Permify/permify-gorm/repositories/scopes"
+	"github.com/Permify/go-role/collections"
+	"github.com/Permify/go-role/helpers"
+	"github.com/Permify/go-role/models"
+	"github.com/Permify/go-role/options"
+	"github.com/Permify/go-role/repositories"
+	"github.com/Permify/go-role/repositories/scopes"
 )
 
 var errUnsupportedValueType = errors.New("err unsupported value type")

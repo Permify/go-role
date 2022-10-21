@@ -1,15 +1,13 @@
 
-![permify-gorm](https://user-images.githubusercontent.com/39353278/157410086-42e02752-d5a9-4c64-bdc3-d3a203a247d7.png)
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/Permify/permify/master/assets/permify-logo.svg" alt="Permify logo" width="336px" /><br />
+</h1>
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/Permify/permify-gorm.svg)](https://pkg.go.dev/github.com/Permify/permify-gorm)
-[![Go Report Card](https://goreportcard.com/badge/github.com/Permify/permify-gorm)](https://goreportcard.com/report/github.com/Permify/permify-gorm)
-![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/Permify/permify-gorm)
-![GitHub](https://img.shields.io/github/license/Permify/permify-gorm)
+[![Go Reference](https://pkg.go.dev/badge/github.com/Permify/go-role.svg)](https://pkg.go.dev/github.com/Permify/go-role)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Permify/go-role)](https://goreportcard.com/report/github.com/Permify/go-role)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/Permify/go-role)
+![GitHub](https://img.shields.io/github/license/Permify/go-role)
 [![Twitter Follow](https://img.shields.io/twitter/follow/GetPermify?style=social)](https://twitter.com/GetPermify)
-
-
-ℹ️ | This package is completely open source and works independently from Permify.
-:---: | :---
 
 ## Associate users with roles and permissions
 
@@ -20,7 +18,7 @@ This package allows you to manage user permissions and roles in your database.
 Install
 
 ```shell
-go get github.com/Permify/permify-gorm
+go get github.com/Permify/go-role
 ```
 
 Run All Tests
@@ -47,7 +45,7 @@ go get gorm.io/driver/clickhouse
 Import permify.
 
 ```go
-import permify `github.com/Permify/permify-gorm`
+import permify `github.com/Permify/go-role`
 ```
 
 Initialize the new Permify.
@@ -388,7 +386,7 @@ You can create the relationships between the user and the role and permissions i
 ```go
 import (
     "gorm.io/gorm"
-    models `github.com/Permify/permify-gorm/models`
+    models `github.com/Permify/go-role/models`
 )
 
 type User struct {
@@ -423,29 +421,22 @@ if errors.Is(err, gorm.ErrRecordNotFound) {
 Stargazers
 -----------
 
-[![Stargazers repo roster for @Permify/permify-gorm](https://reporoster.com/stars/Permify/permify-gorm)](https://github.com/Permify/permify-gorm/stargazers)
+[![Stargazers repo roster for @Permify/go-role](https://reporoster.com/stars/Permify/go-role)](https://github.com/Permify/go-role/stargazers)
 
 
-## Need More, Check Out our API
-
-Permify API is an authorization API which you can add complex rbac and abac solutions.
-
-[<img src="https://user-images.githubusercontent.com/39353278/157747851-ea8462be-60a4-498e-872a-e44cf42411b0.png" width="419px" />](https://www.permify.co/get-started)
-
-
-<h2 align="left">:heart: Let's get connected:</h2>
+## Community & Support
+Join our [Discord channel](https://discord.gg/MJbUjwskdH) for issues, feature requests, feedbacks or anything else. We love to talk about authorization and access control :heart:
 
 <p align="left">
+<a href="https://discord.gg/MJbUjwskdH">
+ <img height="70px" width="70px" alt="permify | Discord" src="https://user-images.githubusercontent.com/39353278/187209316-3d01a799-c51b-4eaa-8f52-168047078a14.png" />
+</a>
 <a href="https://twitter.com/GetPermify">
-  <img alt="guilyx | Twitter" width="50px" src="https://user-images.githubusercontent.com/43545812/144034996-602b144a-16e1-41cc-99e7-c6040b20dcaf.png"/>
+  <img height="70px" width="70px" alt="permify | Twitter" src="https://user-images.githubusercontent.com/39353278/187209323-23f14261-d406-420d-80eb-1aa707a71043.png"/>
 </a>
 <a href="https://www.linkedin.com/company/permifyco">
-  <img alt="guilyx's LinkdeIN" width="50px" src="https://user-images.githubusercontent.com/43545812/144035037-0f415fc7-9f96-4517-a370-ccc6e78a714b.png" />
-</a>
-<a href="https://discord.gg/MJbUjwskdH">
-  <img alt="guilyx's Discord" width="50px" src="https://www.apkmirror.com/wp-content/uploads/2021/06/09/60dbb1f8b30bb.png" />
+  <img height="70px" width="70px" alt="permify | Linkedin" src="https://user-images.githubusercontent.com/39353278/187209321-03293a24-6f63-4321-b362-b0fc89fdd879.png" />
 </a>
 </p>
-
 
 

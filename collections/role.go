@@ -1,8 +1,8 @@
 package collections
 
 import (
-	"github.com/Permify/permify-gorm/helpers"
-	"github.com/Permify/permify-gorm/models"
+	"github.com/Permify/go-role/helpers"
+	"github.com/Permify/go-role/models"
 )
 
 // Role provides methods for you to manage array data more easily.

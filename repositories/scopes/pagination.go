@@ -3,8 +3,8 @@ package scopes
 import (
 	"gorm.io/gorm"
 
-	"github.com/Permify/permify-gorm/helpers"
-	"github.com/Permify/permify-gorm/utils"
+	"github.com/Permify/go-role/helpers"
+	"github.com/Permify/go-role/utils"
 )
 
 // GormPager adds pagination capability to your gorm queries.

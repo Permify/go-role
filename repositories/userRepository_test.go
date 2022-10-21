@@ -10,9 +10,9 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	"github.com/Permify/permify-gorm/collections"
-	"github.com/Permify/permify-gorm/models"
-	"github.com/Permify/permify-gorm/models/pivot"
+	"github.com/Permify/go-role/collections"
+	"github.com/Permify/go-role/models"
+	"github.com/Permify/go-role/models/pivot"
 )
 
 var _ = Describe("User Repository", func() {

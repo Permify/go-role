@@ -3,10 +3,10 @@ package repositories
 import (
 	"gorm.io/gorm"
 
-	"github.com/Permify/permify-gorm/collections"
-	"github.com/Permify/permify-gorm/models"
-	"github.com/Permify/permify-gorm/models/pivot"
-	"github.com/Permify/permify-gorm/repositories/scopes"
+	"github.com/Permify/go-role/collections"
+	"github.com/Permify/go-role/models"
+	"github.com/Permify/go-role/models/pivot"
+	"github.com/Permify/go-role/repositories/scopes"
 )
 
 // IPermissionRepository its data access layer abstraction of permission.
